@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">MarvelPractice</string>
+    <string name="test_character_1_name">A-Bomb (HAS)</string>
+    <string name="test_character_1_description">Rick Jones has been Hulk\'s best bud since day one, but now he\'s more than a friend…he\'s a teammate! Transformed by a Gamma energy explosion, A-Bomb\'s thick, armored skin is just as strong and powerful as it is blue. And when he curls into action, he uses it like a giant bowling ball of destruction! </string>
+    <string name="test_character_2_name">A.I.M.</string>
+    <string name="test_character_2_description">AIM is a terrorist organization bent on destroying the world.</string>
+    <string name="favourite_characters">Favourite characters</string>
+    <string name="random_character">Random character</string>
+    <string name="marvel_logo">Marvel logo</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="settings">Settings</string>
+    <string name="preferences">Preferences</string>
+</resources>

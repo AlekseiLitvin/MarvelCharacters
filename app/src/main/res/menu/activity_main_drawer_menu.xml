@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/favorite_characters"
+            android:icon="@android:drawable/star_big_on"
+            android:title="@string/favourite_characters" />
+        <item
+            android:id="@+id/random_character"
+            android:icon="@android:drawable/ic_menu_mapmode"
+            android:title="@string/random_character" />
+    </group>
+    <item android:title="@string/settings">
+        <menu>
+            <item
+                android:id="@+id/app_settings_menu"
+                android:icon="@android:drawable/ic_menu_manage"
+                android:title="@string/preferences" />
+        </menu>
+    </item>
+</menu>
