@@ -1,8 +1,13 @@
 package by.litvin.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Image {
 
+    @SerializedName("path")
     private String path;
+
+    @SerializedName("extension")
     private String extension;
 
     public String getPath() {

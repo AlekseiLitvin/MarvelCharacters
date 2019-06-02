@@ -11,11 +11,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import by.litvin.R;
 import by.litvin.model.Character;
+import by.litvin.model.Image;
 
 public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MoveAndSwipeListener {
 
@@ -62,7 +66,19 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             if (character != null) {
                 characterName.setText(character.getName());
                 characterDescription.setText(character.getDescription());
-                characterImage.setImageResource(R.drawable.storm); //TODO add character image fetched from API
+
+                Image characterThumbnail = character.getThumbnail();
+                if (characterThumbnail != null) {
+                    String imageUrl = String.format("%s.%s", characterThumbnail.getPath(), characterThumbnail.getExtension());
+                    RequestOptions options = new RequestOptions()
+                            .centerCrop()
+                            .placeholder(R.drawable.storm) //TODO add marvel square logo as a placeholder
+                            .error(R.mipmap.ic_launcher_round);
+                    Glide.with(context)
+                            .load(imageUrl)
+                            .apply(options)
+                            .into(characterImage);
+                }
             }
         }
     }

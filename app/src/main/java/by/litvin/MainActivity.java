@@ -23,6 +23,11 @@ import java.util.List;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
 import by.litvin.callback.ItemTouchHelperCallback;
 import by.litvin.model.Character;
+import by.litvin.model.ResponseData;
+import by.litvin.service.MarvelApiService;
+import by.litvin.util.HashCalculator;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -62,19 +67,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .apply(new RequestOptions().fitCenter())
                 .into(navHeaderLogo);
 
-        //TODO test data, remove later
-        List<Character> characterList = new ArrayList<>();
-        Character character1 = new Character();
-        character1.setName(getResources().getString(R.string.test_character_1_name));
-        character1.setDescription(getResources().getString(R.string.test_character_1_description));
 
-        Character character2 = new Character();
-        character2.setName(getResources().getString(R.string.test_character_2_name));
-        character2.setDescription(getResources().getString(R.string.test_character_2_description));
-
-        characterList.add(character1);
-        characterList.add(character2);
-        charactersRecyclerViewAdapter.setCharacterItems(characterList);
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        MarvelApiService marvelApiService = MarvelApiService.Factory.create(MarvelApiService.BASE_URL);
+        String hash = HashCalculator.calculate(timestamp, MarvelApiService.PRIVATE_KEY, MarvelApiService.PUBLIC_KEY);
+        //TODO move api fetch to separate service
+        marvelApiService.getAllCharacters(10, timestamp, MarvelApiService.PUBLIC_KEY, hash)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(characterApiResponse -> characterApiResponse.getData())
+                .map(characterResponseData -> characterResponseData.getResults())
+                .subscribe(response -> {
+                    charactersRecyclerViewAdapter.setCharacterItems(response);
+                }, Throwable::printStackTrace);
 
     }
 

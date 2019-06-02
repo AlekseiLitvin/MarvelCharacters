@@ -1,11 +1,20 @@
 package by.litvin.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Character {
 
+    @SerializedName("id")
     private int id;
+
+    @SerializedName("name")
     private String name;
+
+    @SerializedName("description")
     private String description;
-    private Image thumb;
+
+    @SerializedName("thumbnail")
+    private Image thumbnail;
 
     public int getId() {
         return id;
@@ -31,11 +40,11 @@ public class Character {
         this.description = description;
     }
 
-    public Image getThumb() {
-        return thumb;
+    public Image getThumbnail() {
+        return thumbnail;
     }
 
-    public void setThumb(Image thumb) {
-        this.thumb = thumb;
+    public void setThumbnail(Image thumb) {
+        this.thumbnail = thumb;
     }
 }
