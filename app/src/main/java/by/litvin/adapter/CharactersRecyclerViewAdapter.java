@@ -23,9 +23,8 @@ import by.litvin.model.Image;
 
 public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MoveAndSwipeListener {
 
-    public static final int TYPE_LOADING = 1;
-    public static final int TYPE_NORMAL = 2;
-    public static final int TYPE_FOOTER = 3;
+    public static final int TYPE_NORMAL = 1;
+    private static final int TYPE_LOADING = 2;
 
     private Context context;
     private List<Character> characters;
@@ -38,6 +37,16 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     public void setCharacterItems(List<Character> characters) {
         this.characters.addAll(characters);
         notifyDataSetChanged();
+    }
+
+    public void addNullDataForProgressBar() {
+        characters.add(null);
+        notifyItemInserted(characters.size() - 1);
+    }
+
+    public void removeNullDataForProgressBar() {
+        characters.remove(characters.size() - 1);
+        notifyItemInserted(characters.size());
     }
 
     @NonNull
@@ -72,7 +81,6 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                     String imageUrl = String.format("%s.%s", characterThumbnail.getPath(), characterThumbnail.getExtension());
                     RequestOptions options = new RequestOptions()
                             .centerCrop()
-                            .placeholder(R.drawable.storm) //TODO add marvel square logo as a placeholder
                             .error(R.mipmap.ic_launcher_round);
                     Glide.with(context)
                             .load(imageUrl)
@@ -85,7 +93,11 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public int getItemViewType(int position) {
-        return TYPE_NORMAL;
+        if (characters.get(position) != null) {
+            return TYPE_NORMAL;
+        } else {
+            return TYPE_LOADING;
+        }
     }
 
     @Override

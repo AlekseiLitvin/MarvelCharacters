@@ -7,4 +7,9 @@
 
     <color name="favorite_character_color">#388E3C</color>
     <color name="TBD_color">#2A75B3</color>
+
+    <color name="google_blue">#4285F4</color>
+    <color name="google_green">#34A853</color>
+    <color name="google_yellow">#FBBC05</color>
+    <color name="google_red">#EA4335</color>
 </resources>

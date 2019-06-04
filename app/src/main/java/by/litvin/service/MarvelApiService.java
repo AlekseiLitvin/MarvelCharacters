@@ -2,53 +2,37 @@ package by.litvin.service;
 
 import java.util.List;
 
-import by.litvin.model.ApiResponse;
+import by.litvin.adapter.CharactersRecyclerViewAdapter;
+import by.litvin.api.MarvelApi;
 import by.litvin.model.Character;
-import by.litvin.model.Comic;
-import io.reactivex.Observable;
-import io.reactivex.Single;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
+import by.litvin.util.HashCalculator;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
-public interface MarvelApiService {
+public class MarvelApiService {
 
-    String BASE_URL = "http://gateway.marvel.com/v1/public/";
-    String DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ssZ"; //TODO
-    String PUBLIC_KEY = "858961528d9190d6ef185e668599b761"; //TODO move into properties file, see - secure-preferences
-    String PRIVATE_KEY = "b9e01a841a358218d6a31809a193111401da9674"; //TODO move into properties file - see secure-preferences
+    //TODO move properties to separate file
+    private static final int LOADED_CHARACTERS_NUMBER = 10;
 
+    //TODO inject with Dagger
+    private MarvelApi marvelApi = MarvelApi.Factory.create(MarvelApi.BASE_URL);
 
-    @GET("characters")
-    Observable<ApiResponse<Character>> getAllCharacters(@Query("limit") long limit,
-                                                        @Query("ts") String timestamp,
-                                                        @Query("apikey") String apikey,
-                                                        @Query("hash") String hash);
+    public void populateCharactersRecyclerViewAdapter(int offset,
+                                                      Consumer<List<Character>> onNext,
+                                                      Consumer<Throwable> onError,
+                                                      Action onComplete) {
 
-    @GET("characters/{characterId}")
-    Single<ApiResponse<Character>> getCharacterById(@Path("characterId") long characterId,
-                                                    @Query("ts") String timestamp,
-                                                    @Query("apikey") String apikey,
-                                                    @Query("hash") String hash);
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String hash = HashCalculator.calculate(timestamp, MarvelApi.PRIVATE_KEY, MarvelApi.PUBLIC_KEY);
 
-    @GET("characters/{characterId}/comics")
-    Observable<ApiResponse<Comic>> getComicsWithCharacter(@Path("characterId") int characterId,
-                                                          @Query("ts") String timestamp,
-                                                          @Query("apikey") String apikey,
-                                                          @Query("hash") String hash);
-
-    class Factory {
-        public static MarvelApiService create(String baseUrl) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build();
-            return retrofit.create(MarvelApiService.class);
-        }
+        marvelApi.getAllCharacters(LOADED_CHARACTERS_NUMBER, offset, timestamp, MarvelApi.PUBLIC_KEY, hash)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(characterApiResponse -> characterApiResponse.getData())
+                .map(characterResponseData -> characterResponseData.getResults())
+                .subscribe(onNext, onError, onComplete); //TODO add error handling logic
     }
 
 }
