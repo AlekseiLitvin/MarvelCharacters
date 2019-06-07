@@ -1,9 +1,13 @@
 package by.litvin.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.litvin.R;
+import by.litvin.activity.CharacterDetailActivity;
+import by.litvin.listeners.MoveAndSwipeListener;
 import by.litvin.model.Character;
 import by.litvin.model.Image;
 
@@ -25,6 +31,7 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
     public static final int TYPE_NORMAL = 1;
     private static final int TYPE_LOADING = 2;
+    public static final String CHARACTER = "character";
 
     private Context context;
     private List<Character> characters;
@@ -82,12 +89,22 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                     RequestOptions options = new RequestOptions()
                             .centerCrop()
                             .error(R.mipmap.ic_launcher_round);
+                    //TODO load photos of lower resolution for recycler view
                     Glide.with(context)
                             .load(imageUrl)
                             .apply(options)
                             .into(characterImage);
                 }
             }
+
+            characterCardView.cardView.setOnClickListener(view -> {
+                Intent intent = new Intent(context, CharacterDetailActivity.class);
+                intent.putExtra(CHARACTER, character);
+                //TODO add image, character name and description to transition animation
+                Pair imageTransition = Pair.create(characterImage, context.getString(R.string.character_image_transition_name));
+                context.startActivity(intent,
+                        ActivityOptions.makeSceneTransitionAnimation((Activity) context, imageTransition).toBundle());
+            });
         }
     }
 

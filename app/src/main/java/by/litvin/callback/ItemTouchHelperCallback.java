@@ -6,22 +6,23 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 
 import by.litvin.R;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
-import by.litvin.adapter.MoveAndSwipeListener;
+import by.litvin.listeners.MoveAndSwipeListener;
 
 public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private MoveAndSwipeListener moveAndSwipeListener;
     private Context context;
+    private boolean isVibrationEventOccurred = false;
 
     public ItemTouchHelperCallback(MoveAndSwipeListener moveAndSwipeListener, Context context) {
         this.moveAndSwipeListener = moveAndSwipeListener;
@@ -49,7 +50,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         moveAndSwipeListener.onItemSwipe(viewHolder.getAdapterPosition());
     }
 
@@ -61,21 +62,19 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                             int actionState,
                             boolean isCurrentlyActive) {
         Paint paint = new Paint();
+        View itemView = viewHolder.itemView;
         Bitmap icon;
         boolean isSwipingRight = dX > 0;
 
+        initVibrationEvent(dX, itemView);
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            View itemView = viewHolder.itemView;
-            float height = (float) itemView.getBottom() - (float) itemView.getTop();
-            float iconWidth = height / 3;
-
+            float iconWidth = (float) itemView.getHeight() / 3;
             if (isSwipingRight) {
                 paint.setColor(ContextCompat.getColor(context, R.color.favorite_character_color));
                 RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
                 canvas.drawRect(background, paint);
                 icon = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_menu_search);
-                Log.i("TEST", String.format("Left %s, Right %s, Top %s, Bottom %s", itemView.getLeft(), itemView.getRight(), itemView.getTop(), itemView.getBottom()));
                 RectF iconLocation = new RectF(
                         (float) itemView.getLeft() + iconWidth,
                         (float) itemView.getTop() + iconWidth,
@@ -96,5 +95,17 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
             }
         }
         super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+    }
+
+    private void initVibrationEvent(float dX, View itemView) {
+        float vibrationTriggerLength = (float) itemView.getWidth() / 3;
+        if (dX > vibrationTriggerLength && !isVibrationEventOccurred) {
+            isVibrationEventOccurred = true;
+            Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator.vibrate(30); //TODO move to properties file
+        }
+        if (dX == 0) {
+            isVibrationEventOccurred = false;
+        }
     }
 }

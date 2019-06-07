@@ -15,7 +15,8 @@
         <ImageView
             android:id="@+id/character_photo"
             android:layout_width="100dp"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:transitionName="@string/character_image_transition_name" />
 
         <TextView
             android:id="@+id/character_name"

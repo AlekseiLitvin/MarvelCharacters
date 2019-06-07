@@ -21,11 +21,9 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.List;
 
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
-import by.litvin.api.MarvelApi;
 import by.litvin.callback.ItemTouchHelperCallback;
 import by.litvin.model.Character;
 import by.litvin.service.MarvelApiService;
-import by.litvin.util.HashCalculator;
 import io.reactivex.functions.Consumer;
 import io.reactivex.internal.functions.Functions;
 
@@ -96,12 +94,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Glide.with(this).load(R.drawable.marvel_logo)
                 .apply(new RequestOptions().fitCenter())
                 .into(navHeaderLogo);
-
-
-        String timestamp = String.valueOf(System.currentTimeMillis());
-
-        String hash = HashCalculator.calculate(timestamp, MarvelApi.PRIVATE_KEY, MarvelApi.PUBLIC_KEY);
-        //TODO move api fetch to separate service
 
         marvelApiService.populateCharactersRecyclerViewAdapter(
                 offset,

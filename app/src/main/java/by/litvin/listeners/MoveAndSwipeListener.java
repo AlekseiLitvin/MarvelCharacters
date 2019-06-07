@@ -1,4 +1,4 @@
-package by.litvin.adapter;
+package by.litvin.listeners;
 
 public interface MoveAndSwipeListener {
 
