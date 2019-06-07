@@ -52,16 +52,15 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/big_character_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/to_delete" />
+                android:text="@string/comics_title" />
 
-            <TextView
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/comics_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/comics_layout_height" />
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/to_delete" />
         </LinearLayout>
 
 

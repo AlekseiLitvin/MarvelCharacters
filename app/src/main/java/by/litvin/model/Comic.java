@@ -2,8 +2,6 @@ package by.litvin.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class Comic {
 
     @SerializedName("id")
@@ -12,11 +10,8 @@ public class Comic {
     @SerializedName("title")
     private String title;
 
-    @SerializedName("description")
-    private String description;
-
-    @SerializedName("images")
-    private List<Image> images;
+    @SerializedName("thumbnail")
+    private Image thumbnail;
 
     public long getId() {
         return id;
@@ -26,11 +21,7 @@ public class Comic {
         return title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public List<Image> getImages() {
-        return images;
+    public Image getThumbnail() {
+        return thumbnail;
     }
 }
