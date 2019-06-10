@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     charactersRecyclerViewAdapter.removeNullDataForProgressBar();
                     charactersRecyclerViewAdapter.setCharacterItems(response);
                 };
-                marvelApiService.populateCharactersRecyclerViewAdapter(
+                marvelApiService.populateCharactersRecyclerView(
                         offset,
                         onNext,
                         Throwable::printStackTrace, //TODO add error handling logic
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .apply(new RequestOptions().fitCenter())
                 .into(navHeaderLogo);
 
-        marvelApiService.populateCharactersRecyclerViewAdapter(
+        marvelApiService.populateCharactersRecyclerView(
                 offset,
                 response -> charactersRecyclerViewAdapter.setCharacterItems(response),
                 Throwable::printStackTrace,
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         swipeRefreshLayout.setColorSchemeResources(R.color.google_blue, R.color.google_green, R.color.google_red, R.color.google_yellow);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             offset += DEFAULT_OFFSET;
-            marvelApiService.populateCharactersRecyclerViewAdapter(
+            marvelApiService.populateCharactersRecyclerView(
                     offset,
                     response -> charactersRecyclerViewAdapter.setCharacterItems(response),
                     Throwable::printStackTrace,

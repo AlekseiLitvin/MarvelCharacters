@@ -2,7 +2,7 @@ package by.litvin.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Comic {
+public class RelatedItem {
 
     @SerializedName("id")
     private long id;

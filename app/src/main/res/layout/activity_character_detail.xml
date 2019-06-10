@@ -45,26 +45,107 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!--TODO remove long test text-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/character_activity_padding"
+            android:paddingBottom="@dimen/character_activity_padding">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/comics_title" />
+                android:layout_marginStart="@dimen/character_activity_margin"
+                android:layout_marginEnd="@dimen/character_activity_margin"
+                android:layout_marginBottom="@dimen/character_activity_margin"
+                android:text="@string/description" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/comics_recycler_view"
+            <TextView
+                android:id="@+id/character_description"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/comics_layout_height" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/character_activity_margin"
+                android:layout_marginEnd="@dimen/character_activity_margin"
+                android:layout_marginBottom="@dimen/character_activity_margin" />
 
+            <!--Comics-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/character_activity_margin"
+                    android:layout_marginEnd="@dimen/character_activity_margin"
+                    android:layout_marginBottom="@dimen/character_activity_margin"
+                    android:text="@string/comics_title" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/comics_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/related_item_layout_height"
+                    android:layout_marginBottom="@dimen/character_activity_margin" />
+            </LinearLayout>
+
+            <!--Series-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/character_activity_margin"
+                    android:layout_marginEnd="@dimen/character_activity_margin"
+                    android:layout_marginBottom="@dimen/character_activity_margin"
+                    android:text="@string/series_title" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/series_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/related_item_layout_height"
+                    android:layout_marginBottom="@dimen/character_activity_margin" />
+            </LinearLayout>
+
+            <!--Events-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/character_activity_margin"
+                    android:layout_marginEnd="@dimen/character_activity_margin"
+                    android:layout_marginBottom="@dimen/character_activity_margin"
+                    android:text="@string/events_title" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/events_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/related_item_layout_height"
+                    android:layout_marginBottom="@dimen/character_activity_margin" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/wiki_page_link"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/character_activity_margin"
+                android:paddingEnd="@dimen/character_activity_margin"
+                android:text="@string/wiki_page"
+                android:textAllCaps="true" />
         </LinearLayout>
-
-
     </android.support.v4.widget.NestedScrollView>
-
-
 </android.support.design.widget.CoordinatorLayout>

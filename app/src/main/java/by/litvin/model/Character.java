@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Character implements Parcelable {
 
     protected Character(Parcel in) {
@@ -12,6 +14,7 @@ public class Character implements Parcelable {
         name = in.readString();
         description = in.readString();
         thumbnail = in.readParcelable(Image.class.getClassLoader());
+        links = in.createTypedArrayList(Link.CREATOR);
     }
 
     @SerializedName("id")
@@ -25,6 +28,9 @@ public class Character implements Parcelable {
 
     @SerializedName("thumbnail")
     private Image thumbnail;
+
+    @SerializedName("urls")
+    private List<Link> links;
 
     public int getId() {
         return id;
@@ -58,6 +64,14 @@ public class Character implements Parcelable {
         this.thumbnail = thumb;
     }
 
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -65,10 +79,12 @@ public class Character implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+
         dest.writeInt(id);
         dest.writeString(name);
         dest.writeString(description);
         dest.writeParcelable(thumbnail, flags);
+        dest.writeTypedList(links);
     }
 
     public static final Creator<Character> CREATOR = new Creator<Character>() {
@@ -82,4 +98,5 @@ public class Character implements Parcelable {
             return new Character[size];
         }
     };
+
 }

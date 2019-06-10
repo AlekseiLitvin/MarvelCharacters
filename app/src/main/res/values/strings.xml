@@ -13,4 +13,9 @@
     <string name="preferences">Preferences</string>
     <string name="character_image_transition_name">characterImageTransition</string>
     <string name="comics_title">Comics</string>
+    <string name="description">Description</string>
+    <string name="description_is_not_available">Description is not available</string>
+    <string name="series_title">Series</string>
+    <string name="events_title">Events</string>
+    <string name="wiki_page">Wiki page</string>
 </resources>

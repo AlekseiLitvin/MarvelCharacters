@@ -17,22 +17,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.litvin.R;
-import by.litvin.model.Comic;
+import by.litvin.model.RelatedItem;
 import by.litvin.model.Image;
 
 //TODO refactor for series?
 public class RelatedItemRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //TODO change name and type
-    private List<Comic> comics = new ArrayList<>();
+    private List<RelatedItem> relatedItems = new ArrayList<>();
     private Context context;
 
     public RelatedItemRecyclerViewAdapter(Context context) {
         this.context = context;
     }
 
-    public void addRelatedItems(List<Comic> comics) {
-        this.comics.addAll(comics);
+    public void addRelatedItems(List<RelatedItem> comics) {
+        this.relatedItems.addAll(comics);
         notifyDataSetChanged();
     }
 
@@ -51,21 +51,21 @@ public class RelatedItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             TextView relatedItemText = relatedItemViewHolder.frameLayout.findViewById(R.id.related_item_text);
             ImageView relatedItemImage = relatedItemViewHolder.frameLayout.findViewById(R.id.related_item_image);
 
-            Comic comic = comics.get(position);
-            relatedItemText.setText(comic.getTitle());
+            RelatedItem relatedItem = relatedItems.get(position);
+            relatedItemText.setText(relatedItem.getTitle());
 
-            Image thumbnail = comic.getThumbnail();
+            Image thumbnail = relatedItem.getThumbnail();
             String imageUrl = String.format("%s.%s", thumbnail.getPath(), thumbnail.getExtension());
             Glide.with(context)
                     .load(imageUrl)
-                    .apply(new RequestOptions().centerCrop())
+                    .apply(new RequestOptions().fitCenter())
                     .into(relatedItemImage);
         }
     }
 
     @Override
     public int getItemCount() {
-        return comics.size();
+        return relatedItems.size();
     }
 
     private class RelatedItemViewHolder extends RecyclerView.ViewHolder {
@@ -73,7 +73,7 @@ public class RelatedItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
         public RelatedItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            FrameLayout frameLayout = itemView.findViewById(R.id.related_entity_recycler_item);
+            frameLayout = itemView.findViewById(R.id.related_entity_recycler_item);
         }
     }
 }

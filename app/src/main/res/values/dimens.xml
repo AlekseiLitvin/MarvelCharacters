@@ -3,5 +3,9 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="character_image_toolbar_height">250dp</dimen>
-    <dimen name="comics_layout_height">160dp</dimen>
+    <dimen name="related_item_layout_height">160dp</dimen>
+    <dimen name="related_item_width">120dp</dimen>
+    <dimen name="related_item_padding">8dp</dimen>
+    <dimen name="character_activity_padding">16dp</dimen>
+    <dimen name="character_activity_margin">16dp</dimen>
 </resources>
