@@ -134,7 +134,7 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         notifyDataSetChanged();
     }
 
-    public static class CharacterCardView extends RecyclerView.ViewHolder {
+    public class CharacterCardView extends RecyclerView.ViewHolder {
         private CardView cardView;
 
         public CharacterCardView(@NonNull CardView itemView) {
@@ -143,7 +143,7 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         }
     }
 
-    public static class FooterView extends RecyclerView.ViewHolder {
+    public class FooterView extends RecyclerView.ViewHolder {
         private ProgressBar progressBar;
 
         public FooterView(@NonNull View itemView) {

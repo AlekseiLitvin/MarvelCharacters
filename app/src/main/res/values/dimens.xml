@@ -8,4 +8,5 @@
     <dimen name="related_item_padding">8dp</dimen>
     <dimen name="character_activity_padding">16dp</dimen>
     <dimen name="character_activity_margin">16dp</dimen>
+    <dimen name="big_related_item_padding">16dp</dimen>
 </resources>

@@ -1,6 +1,7 @@
 package by.litvin.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,14 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.litvin.R;
-import by.litvin.model.RelatedItem;
+import by.litvin.activity.RelatedItemActivity;
 import by.litvin.model.Image;
+import by.litvin.model.RelatedItem;
 
 //TODO refactor for series?
 public class RelatedItemRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final String POSITION = "Position";
+    public static final String RELATED_ITEMS = "Related item";
+
     //TODO change name and type
-    private List<RelatedItem> relatedItems = new ArrayList<>();
+    private ArrayList<RelatedItem> relatedItems = new ArrayList<>();
     private Context context;
 
     public RelatedItemRecyclerViewAdapter(Context context) {
@@ -60,6 +65,13 @@ public class RelatedItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                     .load(imageUrl)
                     .apply(new RequestOptions().fitCenter())
                     .into(relatedItemImage);
+
+            relatedItemViewHolder.frameLayout.setOnClickListener(view -> {
+                Intent intent = new Intent(context, RelatedItemActivity.class);
+                intent.putExtra(POSITION, position);
+                intent.putParcelableArrayListExtra(RELATED_ITEMS, relatedItems);
+                context.startActivity(intent);
+            });
         }
     }
 

@@ -36,7 +36,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
         populateToolbar(character);
         populateCharacterDescription(character);
-        populateRelateItems(character);
+        populateRelatedItems(character);
         populateRelatedLinks(character);
 
     }
@@ -54,7 +54,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void populateRelateItems(Character character) {
+    private void populateRelatedItems(Character character) {
         RecyclerView comicsRecyclerView = findViewById(R.id.comics_recycler_view);
         RelatedItemRecyclerViewAdapter comicsRecyclerViewAdapter = new RelatedItemRecyclerViewAdapter(this);
         comicsRecyclerView.setAdapter(comicsRecyclerViewAdapter);
