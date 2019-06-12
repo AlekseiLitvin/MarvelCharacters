@@ -24,6 +24,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private MoveAndSwipeListener moveAndSwipeListener;
     private Context context;
     private boolean isVibrationEventOccurred = false;
+    private boolean isFavouriteIconActivated = false;
 
     public ItemTouchHelperCallback(MoveAndSwipeListener moveAndSwipeListener, Context context) {
         this.moveAndSwipeListener = moveAndSwipeListener;
@@ -35,7 +36,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
             if (viewHolder.getItemViewType() == CharactersRecyclerViewAdapter.TYPE_NORMAL) {
                 final int dragFlags = 0; //TODO implement drag?
-                final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+                final int swipeFlags = ItemTouchHelper.END;
                 return makeMovementFlags(dragFlags, swipeFlags);
             }
         }
@@ -64,38 +65,33 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                             boolean isCurrentlyActive) {
         Paint paint = new Paint();
         View itemView = viewHolder.itemView;
-        Bitmap icon;
         boolean isSwipingRight = dX > 0;
 
-        initVibrationEvent(dX, itemView);
-
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            initVibrationEvent(dX, itemView);
             float iconWidth = (float) itemView.getHeight() / 3;
             if (isSwipingRight) {
-                paint.setColor(ContextCompat.getColor(context, R.color.favorite_character_color));
+                paint.setColor(ContextCompat.getColor(context, R.color.favorite_character_color)); //TODO change color when functionality will be defined
                 RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
                 canvas.drawRect(background, paint);
-                icon = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.ic_menu_search);
                 RectF iconLocation = new RectF(
                         (float) itemView.getLeft() + iconWidth,
                         (float) itemView.getTop() + iconWidth,
                         (float) itemView.getLeft() + 2 * iconWidth,
                         (float) itemView.getBottom() - iconWidth);
-                canvas.drawBitmap(icon, null, iconLocation, paint);
-            } else {
-                paint.setColor(ContextCompat.getColor(context, R.color.TBD_color)); //TODO change color when functionality will be defined
-                RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
-                canvas.drawRect(background, paint);
-                icon = BitmapFactory.decodeResource(context.getResources(), android.R.drawable.star_big_on);
-                RectF iconLocation = new RectF(
-                        (float) itemView.getRight() - 2 * iconWidth,
-                        (float) itemView.getTop() + iconWidth,
-                        (float) itemView.getRight() - iconWidth,
-                        (float) itemView.getBottom() - iconWidth);
-                canvas.drawBitmap(icon, null, iconLocation, paint);
+                canvas.drawBitmap(getFavouriteIcon(dX, itemView), null, iconLocation, paint);
             }
         }
         super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+    }
+
+    private Bitmap getFavouriteIcon(float dX, View itemView) {
+        float favouriteEventTriggerLength = (float) itemView.getWidth() / 3;
+        if (dX > favouriteEventTriggerLength) {
+            isFavouriteIconActivated = true;
+            return  BitmapFactory.decodeResource(context.getResources(), android.R.drawable.star_big_on);
+        }
+        return BitmapFactory.decodeResource(context.getResources(), android.R.drawable.star_big_off);
     }
 
     private void initVibrationEvent(float dX, View itemView) {
