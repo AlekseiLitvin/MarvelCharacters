@@ -9,13 +9,16 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="closeRelatedItemBig"
         android:layout_gravity="top|end"
+        android:layout_marginTop="@dimen/close_button_margin"
+        android:layout_marginEnd="@dimen/close_button_margin"
+        android:onClick="closeBigRelatedItem"
         android:src="@drawable/ic_close_white_24dp" />
-    
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/related_item_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

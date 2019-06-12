@@ -53,11 +53,17 @@ public class RelatedItemPagerAdapter extends PagerAdapter {
         Image characterThumbnail = relatedItem.getThumbnail();
         String imageUrl = String.format("%s.%s", characterThumbnail.getPath(), characterThumbnail.getExtension());
         ImageView bigRelatedItemImage = linearLayout.findViewById(R.id.big_related_item_image);
+        bigRelatedItemImage.setTransitionName(context.getString(R.string.big_related_item_transition) + position);
         Glide.with(context)
                 .load(imageUrl)
                 .into(bigRelatedItemImage);
 
         container.addView(linearLayout);
         return linearLayout;
+    }
+
+    @Override
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+        container.removeView((LinearLayout) object);
     }
 }

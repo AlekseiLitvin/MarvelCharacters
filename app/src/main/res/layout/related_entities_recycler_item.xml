@@ -14,10 +14,11 @@
         <ImageView
             android:id="@+id/related_item_image"
             android:layout_width="match_parent"
-            android:adjustViewBounds="true"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:scaleType="centerInside" />
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+             />
 
         <TextView
             android:id="@+id/related_item_text"

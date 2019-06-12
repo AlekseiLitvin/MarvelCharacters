@@ -1,5 +1,7 @@
 package by.litvin.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -46,7 +48,7 @@ public class RelatedItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(viewGroup.getContext())
-                        .inflate(R.layout.related_entities_recycler_item, viewGroup, false);
+                .inflate(R.layout.related_entities_recycler_item, viewGroup, false);
         return new RelatedItemViewHolder(frameLayout);
     }
 
@@ -56,6 +58,7 @@ public class RelatedItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             RelatedItemViewHolder relatedItemViewHolder = (RelatedItemViewHolder) viewHolder;
             TextView relatedItemText = relatedItemViewHolder.frameLayout.findViewById(R.id.related_item_text);
             ImageView relatedItemImage = relatedItemViewHolder.frameLayout.findViewById(R.id.related_item_image);
+            relatedItemImage.setTransitionName(context.getString(R.string.big_related_item_transition) + position);
 
             RelatedItem relatedItem = relatedItems.get(position);
             relatedItemText.setText(relatedItem.getTitle());
@@ -71,7 +74,8 @@ public class RelatedItemRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                 Intent intent = new Intent(context, RelatedItemActivity.class);
                 intent.putExtra(POSITION, position);
                 intent.putParcelableArrayListExtra(RELATED_ITEMS, relatedItems);
-                context.startActivity(intent);
+                context.startActivity(intent,
+                        ActivityOptions.makeSceneTransitionAnimation((Activity) context, relatedItemImage, relatedItemImage.getTransitionName()).toBundle());
             });
         }
     }

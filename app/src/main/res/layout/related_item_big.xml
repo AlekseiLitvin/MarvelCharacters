@@ -2,20 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:orientation="vertical">
+    android:clipChildren="false"
+    android:orientation="vertical"
+    android:padding="@dimen/big_related_item_padding">
 
     <ImageView
         android:id="@+id/big_related_item_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipChildren="false"
-        android:padding="@dimen/big_related_item_padding" />
-
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
 
     <TextView
         android:id="@+id/big_related_item_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:lines="3"
+        android:textAlignment="center"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large.Inverse" />
 
 </LinearLayout>

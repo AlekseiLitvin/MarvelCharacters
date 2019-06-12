@@ -32,7 +32,7 @@ public class RelatedItemActivity extends AppCompatActivity {
         viewPager.setCurrentItem(position);
     }
 
-    public void closeRelatedItemBig(View view) {
-        //TODO implement close button
+    public void closeBigRelatedItem(View view) {
+        onBackPressed();
     }
 }
