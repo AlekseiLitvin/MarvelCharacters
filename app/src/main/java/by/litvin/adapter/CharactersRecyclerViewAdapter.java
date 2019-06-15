@@ -44,6 +44,8 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
     public void setCharacterItems(List<Character> characters) {
         this.characters.addAll(characters);
+
+        //TODO not a best way, change later (noitfy insert etc)
         notifyDataSetChanged();
     }
 
