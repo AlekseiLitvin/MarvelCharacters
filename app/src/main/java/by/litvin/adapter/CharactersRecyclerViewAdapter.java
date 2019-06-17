@@ -28,6 +28,7 @@ import by.litvin.listeners.MoveAndSwipeListener;
 import by.litvin.model.Character;
 import by.litvin.model.Image;
 
+//TODO try to implement using ListAdapter
 public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MoveAndSwipeListener {
 
     public static final int TYPE_NORMAL = 1;
@@ -57,6 +58,10 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     public void removeNullDataForProgressBar() {
         characters.remove(characters.size() - 1);
         notifyItemInserted(characters.size());
+    }
+
+    public List<Character> getCharacters() {
+        return characters;
     }
 
     @NonNull

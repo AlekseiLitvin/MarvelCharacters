@@ -8,9 +8,17 @@ public class Link implements Parcelable {
     private String type;
     private String url;
 
-    protected Link(Parcel in) {
+    public Link(Parcel in) {
         type = in.readString();
         url = in.readString();
+    }
+
+    public Link() {
+    }
+
+    public Link(String type, String url) {
+        this.type = type;
+        this.url = url;
     }
 
     public String getType() {

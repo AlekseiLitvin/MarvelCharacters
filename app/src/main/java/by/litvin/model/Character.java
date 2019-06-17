@@ -3,10 +3,20 @@ package by.litvin.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
+import by.litvin.model.converter.LinkConverter;
+
+@Entity(tableName = "character_table")
 public class Character implements Parcelable {
 
     protected Character(Parcel in) {
@@ -17,7 +27,11 @@ public class Character implements Parcelable {
         links = in.createTypedArrayList(Link.CREATOR);
     }
 
+    public Character() {
+    }
+
     @SerializedName("id")
+    @PrimaryKey
     private int id;
 
     @SerializedName("name")
@@ -27,10 +41,15 @@ public class Character implements Parcelable {
     private String description;
 
     @SerializedName("thumbnail")
+    @Embedded
     private Image thumbnail;
 
     @SerializedName("urls")
+    @TypeConverters(LinkConverter.class)
     private List<Link> links;
+
+    @Ignore
+    private boolean isFavourite = false;
 
     public int getId() {
         return id;
@@ -72,6 +91,14 @@ public class Character implements Parcelable {
         this.links = links;
     }
 
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -99,4 +126,18 @@ public class Character implements Parcelable {
         }
     };
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Character character = (Character) o;
+        return Objects.equals(name, character.name) &&
+                Objects.equals(description, character.description) &&
+                Objects.equals(thumbnail, character.thumbnail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, thumbnail);
+    }
 }

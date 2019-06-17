@@ -8,23 +8,29 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Vibrator;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import by.litvin.R;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
 import by.litvin.listeners.MoveAndSwipeListener;
+import by.litvin.model.Character;
+import by.litvin.viewmodel.CharacterViewModel;
 
 public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private MoveAndSwipeListener moveAndSwipeListener;
     private Context context;
     private boolean isVibrationEventOccurred = false;
-    private boolean isFavouriteIconActivated = false;
 
     public ItemTouchHelperCallback(MoveAndSwipeListener moveAndSwipeListener, Context context) {
         this.moveAndSwipeListener = moveAndSwipeListener;
@@ -79,19 +85,31 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                         (float) itemView.getTop() + iconWidth,
                         (float) itemView.getLeft() + 2 * iconWidth,
                         (float) itemView.getBottom() - iconWidth);
-                canvas.drawBitmap(getFavouriteIcon(dX, itemView), null, iconLocation, paint);
+                Bitmap favouriteIcon = addCharacterToFavourite(dX, itemView, viewHolder);
+                canvas.drawBitmap(favouriteIcon, null, iconLocation, paint);
             }
         }
         super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
-    private Bitmap getFavouriteIcon(float dX, View itemView) {
+    private Bitmap addCharacterToFavourite(float dX, View itemView, RecyclerView.ViewHolder viewHolder) {
         float favouriteEventTriggerLength = (float) itemView.getWidth() / 3;
         if (dX > favouriteEventTriggerLength) {
-            isFavouriteIconActivated = true;
-            return  BitmapFactory.decodeResource(context.getResources(), android.R.drawable.star_big_on);
+            insertFavouriteCharacter(viewHolder);
+            return BitmapFactory.decodeResource(context.getResources(), android.R.drawable.star_big_on);
         }
         return BitmapFactory.decodeResource(context.getResources(), android.R.drawable.star_big_off);
+    }
+
+    private void insertFavouriteCharacter(RecyclerView.ViewHolder viewHolder) {
+        List<Character> characters = ((CharactersRecyclerViewAdapter) moveAndSwipeListener).getCharacters();
+        Character character = characters.get(viewHolder.getAdapterPosition());
+        CharacterViewModel characterViewModel = ViewModelProviders.of((FragmentActivity) context).get(CharacterViewModel.class);
+        if (!character.isFavourite()) {
+            characterViewModel.insert(character);
+            character.setFavourite(true);
+            Toast.makeText(context, context.getString(R.string.character_saved), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initVibrationEvent(float dX, View itemView) {

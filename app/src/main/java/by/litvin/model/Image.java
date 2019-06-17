@@ -5,11 +5,21 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 public class Image implements Parcelable {
 
     protected Image(Parcel in) {
         path = in.readString();
         extension = in.readString();
+    }
+
+    public Image(String path, String extension) {
+        this.path = path;
+        this.extension = extension;
+    }
+
+    public Image() {
     }
 
     @SerializedName("path")
@@ -56,4 +66,18 @@ public class Image implements Parcelable {
             return new Image[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Image image = (Image) o;
+        return Objects.equals(path, image.path) &&
+                Objects.equals(extension, image.extension);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, extension);
+    }
 }
