@@ -3,17 +3,21 @@ package by.litvin.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Ignore;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
 public class Image implements Parcelable {
 
+    @Ignore
     protected Image(Parcel in) {
         path = in.readString();
         extension = in.readString();
     }
 
+    @Ignore
     public Image(String path, String extension) {
         this.path = path;
         this.extension = extension;

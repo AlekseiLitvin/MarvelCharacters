@@ -38,6 +38,10 @@ public class FavCharactersRecyclerViewAdapter extends ListAdapter<Character, Fav
         }
     };
 
+    public Character getCharacterAt(int postition) {
+        return getItem(postition);
+    }
+
     @NonNull
     @Override
     public CharacterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
