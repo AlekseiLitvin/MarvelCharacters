@@ -12,13 +12,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.FavCharacterActivity"></activity>
+        <activity android:name=".activity.FavCharacterActivity" />
         <activity
             android:name=".activity.RelatedItemActivity"
-            android:theme="@style/AppTheme.Translucent"></activity>
+            android:theme="@style/AppTheme.Translucent" />
+
         <activity
             android:name=".activity.CharacterDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar" />
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
