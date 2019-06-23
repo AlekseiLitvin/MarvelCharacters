@@ -1,34 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/related_entity_recycler_item"
-    android:layout_width="@dimen/related_item_width"
-    android:layout_height="match_parent"
-    android:background="?attr/selectableItemBackground">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <data>
+
+        <variable
+            name="relatedItem"
+            type="by.litvin.model.RelatedItem" />
+
+        <variable
+            name="position"
+            type="Integer" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/related_entity_recycler_item"
+        android:layout_width="@dimen/related_item_width"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/related_item_padding">
+        android:background="?attr/selectableItemBackground">
 
-        <ImageView
-            android:id="@+id/related_item_image"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:scaleType="centerInside"
-             />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/related_item_padding">
 
-        <TextView
-            android:id="@+id/related_item_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:lines="2"
-            android:textAlignment="center" />
+            <ImageView
+                android:id="@+id/related_item_image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:transitionName="@{@string/big_related_item_transition + position}"
+                app:relatedItemImage='@{relatedItem.thumbnail.path + "." + relatedItem.thumbnail.extension}' />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/related_item_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="2"
+                android:text="@{relatedItem.title}"
+                android:textAlignment="center" />
 
-</FrameLayout>
+        </LinearLayout>
+    </FrameLayout>
+</layout>

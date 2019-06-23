@@ -1,26 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipChildren="false"
-    android:orientation="vertical"
-    android:padding="@dimen/big_related_item_padding">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/big_related_item_image"
+    <data>
+
+        <variable
+            name="relatedItem"
+            type="by.litvin.model.RelatedItem" />
+
+        <variable
+            name="position"
+            type="Integer" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:orientation="vertical"
+        android:padding="@dimen/big_related_item_padding">
 
-    <TextView
-        android:id="@+id/big_related_item_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:lines="3"
-        android:textAlignment="center"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large.Inverse" />
+        <ImageView
+            android:id="@+id/big_related_item_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:transitionName="@{@string/big_related_item_transition + position}"
+            app:bigRelatedItemImage='@{relatedItem.thumbnail.path + "." + relatedItem.thumbnail.extension}' />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/big_related_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="3"
+            android:text="@{relatedItem.title}"
+            android:textAlignment="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large.Inverse" />
+
+    </LinearLayout>
+</layout>
+

@@ -4,19 +4,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.PagerAdapter;
-
-import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 import by.litvin.R;
-import by.litvin.model.Image;
+import by.litvin.databinding.RelatedItemBigBinding;
 import by.litvin.model.RelatedItem;
 
 public class RelatedItemPagerAdapter extends PagerAdapter {
@@ -42,24 +39,15 @@ public class RelatedItemPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        LinearLayout linearLayout =
-                (LinearLayout) LayoutInflater.from(context).inflate(R.layout.related_item_big, container, false);
+        LayoutInflater layoutInflater = LayoutInflater.from(container.getContext());
+        RelatedItemBigBinding binding =
+                DataBindingUtil.inflate(layoutInflater, R.layout.related_item_big, container, false);
 
-        RelatedItem relatedItem = relatedItems.get(position);
+        binding.setPosition(position);
+        binding.setRelatedItem(relatedItems.get(position));
 
-        TextView bigRelatedItemTitle = linearLayout.findViewById(R.id.big_related_item_title);
-        bigRelatedItemTitle.setText(relatedItem.getTitle());
-
-        Image characterThumbnail = relatedItem.getThumbnail();
-        String imageUrl = String.format("%s.%s", characterThumbnail.getPath(), characterThumbnail.getExtension());
-        ImageView bigRelatedItemImage = linearLayout.findViewById(R.id.big_related_item_image);
-        bigRelatedItemImage.setTransitionName(context.getString(R.string.big_related_item_transition) + position);
-        Glide.with(context)
-                .load(imageUrl)
-                .into(bigRelatedItemImage);
-
-        container.addView(linearLayout);
-        return linearLayout;
+        container.addView(binding.getRoot());
+        return binding.getRoot();
     }
 
     @Override

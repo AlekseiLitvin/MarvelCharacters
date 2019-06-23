@@ -2,18 +2,23 @@ package by.litvin.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
 
+import androidx.databinding.BindingAdapter;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 import java.util.Objects;
 
+import by.litvin.R;
 import by.litvin.model.converter.LinkConverter;
 
 @Entity(tableName = "character_table")
@@ -104,9 +109,20 @@ public class Character implements Parcelable {
         return 0;
     }
 
+    @BindingAdapter("characterImage")
+    public static void loadImage(ImageView imageView, String imageUrl) {
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .error(R.mipmap.ic_launcher_round);
+        //TODO load photos of lower resolution for recycler view
+        Glide.with(imageView.getContext())
+                .load(imageUrl)
+                .apply(options)
+                .into(imageView);
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(id);
         dest.writeString(name);
         dest.writeString(description);

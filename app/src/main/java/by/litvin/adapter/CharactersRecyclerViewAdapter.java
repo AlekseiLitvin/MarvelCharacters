@@ -8,25 +8,20 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import by.litvin.R;
 import by.litvin.activity.CharacterDetailActivity;
+import by.litvin.databinding.CharacterRecyclerItemBinding;
 import by.litvin.listeners.MoveAndSwipeListener;
 import by.litvin.model.Character;
-import by.litvin.model.Image;
 
 //TODO try to implement using ListAdapter
 public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MoveAndSwipeListener {
@@ -68,9 +63,10 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_NORMAL) {
-            CardView characterItem = (CardView) LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.character_recycler_item, parent, false);
-            return new CharacterCardView(characterItem);
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            CharacterRecyclerItemBinding binding =
+                    DataBindingUtil.inflate(layoutInflater, R.layout.character_recycler_item, parent, false);
+            return new CharacterCardView(binding);
         } else {
             View footerProgressBar = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.character_recycler_footer, parent, false);
@@ -81,35 +77,16 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (viewHolder instanceof CharacterCardView) {
-            CharacterCardView characterCardView = (CharacterCardView) viewHolder;
-            TextView characterName = characterCardView.cardView.findViewById(R.id.character_name);
-            TextView characterDescription = characterCardView.cardView.findViewById(R.id.character_description);
-            ImageView characterImage = characterCardView.cardView.findViewById(R.id.character_photo);
-
             Character character = characters.get(position);
-            if (character != null) {
-                characterName.setText(character.getName());
-                characterDescription.setText(character.getDescription());
+            CharacterCardView characterViewHolder = (CharacterCardView) viewHolder;
+            characterViewHolder.bind(character);
+            CharacterRecyclerItemBinding binding = characterViewHolder.binding;
 
-                Image characterThumbnail = character.getThumbnail();
-                if (characterThumbnail != null) {
-                    String imageUrl = String.format("%s.%s", characterThumbnail.getPath(), characterThumbnail.getExtension());
-                    RequestOptions options = new RequestOptions()
-                            .centerCrop()
-                            .error(R.mipmap.ic_launcher_round);
-                    //TODO load photos of lower resolution for recycler view
-                    Glide.with(context)
-                            .load(imageUrl)
-                            .apply(options)
-                            .into(characterImage);
-                }
-            }
-
-            characterCardView.cardView.setOnClickListener(view -> {
+            binding.getRoot().setOnClickListener(view -> {
                 Intent intent = new Intent(context, CharacterDetailActivity.class);
                 intent.putExtra(CHARACTER, character);
                 //TODO add image, character name and description to transition animation
-                Pair imageTransition = Pair.create(characterImage, context.getString(R.string.character_image_transition_name));
+                Pair imageTransition = Pair.create(binding.characterPhoto, context.getString(R.string.character_image_transition_name));
                 context.startActivity(intent,
                         ActivityOptions.makeSceneTransitionAnimation((Activity) context, imageTransition).toBundle());
             });
@@ -143,11 +120,16 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     }
 
     public class CharacterCardView extends RecyclerView.ViewHolder {
-        private CardView cardView;
+        private CharacterRecyclerItemBinding binding;
 
-        public CharacterCardView(@NonNull CardView itemView) {
-            super(itemView);
-            cardView = itemView.findViewById(R.id.character_card_view);
+        public CharacterCardView(CharacterRecyclerItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        public void bind(Character character) {
+            binding.setCharacter(character);
+            binding.executePendingBindings();
         }
     }
 
