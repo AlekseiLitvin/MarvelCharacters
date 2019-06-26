@@ -85,7 +85,6 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             binding.getRoot().setOnClickListener(view -> {
                 Intent intent = new Intent(context, CharacterDetailActivity.class);
                 intent.putExtra(CHARACTER, character);
-                //TODO add image, character name and description to transition animation
                 Pair imageTransition = Pair.create(binding.characterPhoto, context.getString(R.string.character_image_transition_name));
                 context.startActivity(intent,
                         ActivityOptions.makeSceneTransitionAnimation((Activity) context, imageTransition).toBundle());
