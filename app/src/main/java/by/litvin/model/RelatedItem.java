@@ -2,7 +2,12 @@ package by.litvin.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
 
+import androidx.databinding.BindingAdapter;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.annotations.SerializedName;
 
 public class RelatedItem implements Parcelable {
@@ -32,6 +37,22 @@ public class RelatedItem implements Parcelable {
 
     public Image getThumbnail() {
         return thumbnail;
+    }
+
+    @BindingAdapter("relatedItemImage")
+    public static void loadImage(ImageView imageView, String imageUrl) {
+        Glide.with(imageView.getContext())
+                .load(imageUrl)
+                .apply(new RequestOptions().fitCenter())
+                .into(imageView);
+    }
+
+    @BindingAdapter("bigRelatedItemImage")
+    public static void loadBigImage(ImageView imageView, String imageUrl) {
+        Glide.with(imageView.getContext())
+                .load(imageUrl)
+                .into(imageView);
+
     }
 
     @Override

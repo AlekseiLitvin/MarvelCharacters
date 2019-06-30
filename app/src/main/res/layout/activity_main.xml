@@ -34,7 +34,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/characters_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/character_recycler_item" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 

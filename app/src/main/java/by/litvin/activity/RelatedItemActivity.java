@@ -15,8 +15,6 @@ import by.litvin.model.RelatedItem;
 
 public class RelatedItemActivity extends AppCompatActivity {
 
-    private ViewPager viewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +25,7 @@ public class RelatedItemActivity extends AppCompatActivity {
                 getIntent().getParcelableArrayListExtra(RelatedItemRecyclerViewAdapter.RELATED_ITEMS);
 
 
-        viewPager = findViewById(R.id.related_item_view_pager);
+        ViewPager viewPager = findViewById(R.id.related_item_view_pager);
         viewPager.setAdapter(new RelatedItemPagerAdapter(this, relatedItems));
         viewPager.setCurrentItem(position);
     }

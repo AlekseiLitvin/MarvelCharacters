@@ -1,46 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/character_card_view"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_margin="5dp"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="2dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <data>
+
+        <variable
+            name="character"
+            type="by.litvin.model.Character" />
+
+        <variable
+            name="imageUrl"
+            type="String" />
+
+        <import type="android.text.TextUtils" />
+    </data>
+
+    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/character_card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="100dp"
+        android:layout_margin="5dp"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="2dp">
 
-        <ImageView
-            android:id="@+id/character_photo"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:transitionName="@string/character_image_transition_name" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/character_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_toEndOf="@id/character_photo"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/black" />
+            <ImageView
+                android:id="@+id/character_photo"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:transitionName="@string/character_image_transition_name"
+                app:characterImage='@{character.thumbnail.path + "." + character.thumbnail.extension}'
+                tools:ignore="ContentDescription" />
 
-        <TextView
-            android:id="@+id/character_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/character_name"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_toEndOf="@id/character_photo"
-            android:ellipsize="end"
-            android:maxLines="3" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/character_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/character_photo"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{character.name}"
+                android:textColor="@color/black" />
 
-</androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/character_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/character_name"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_toEndOf="@id/character_photo"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="@{TextUtils.isEmpty(character.description) ? @string/no_data_available : character.description}" />
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>
+
