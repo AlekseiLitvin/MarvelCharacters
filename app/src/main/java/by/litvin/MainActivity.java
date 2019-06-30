@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean isLoading = false;
 
     private CharactersRecyclerViewAdapter charactersRecyclerViewAdapter;
-    private RecyclerView recyclerView;
     private DrawerLayout drawerLayout;
     private MarvelApiService marvelApiService = new MarvelApiService(); //TODO Inject using dagger
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         charactersRecyclerViewAdapter = new CharactersRecyclerViewAdapter(this);
-        recyclerView = findViewById(R.id.characters_recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.characters_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(charactersRecyclerViewAdapter);
         recyclerView.addOnScrollListener(scrollListener);
