@@ -13,10 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
+import javax.inject.Inject;
+
 import by.litvin.R;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
 import by.litvin.adapter.RelatedItemRecyclerViewAdapter;
 import by.litvin.constant.LinkType;
+import by.litvin.di.component.DaggerCharacterDetailActivityComponent;
+import by.litvin.di.component.DaggerMarvelApiServiceComponent;
 import by.litvin.model.Character;
 import by.litvin.model.Image;
 import by.litvin.model.Link;
@@ -25,8 +29,8 @@ import by.litvin.service.MarvelApiService;
 
 public class CharacterDetailActivity extends AppCompatActivity {
 
-    //TODO inject using dagger
-    private MarvelApiService marvelApiService = new MarvelApiService();
+    @Inject
+    MarvelApiService marvelApiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,10 @@ public class CharacterDetailActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        DaggerCharacterDetailActivityComponent.builder()
+                .marvelApiServiceComponent(DaggerMarvelApiServiceComponent.create())
+                .build()
+                .inject(this);
 
         Character character = getIntent().getParcelableExtra(CharactersRecyclerViewAdapter.CHARACTER);
 

@@ -2,6 +2,8 @@ package by.litvin.service;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import by.litvin.api.MarvelApi;
 import by.litvin.model.ApiResponse;
 import by.litvin.model.Character;
@@ -20,10 +22,15 @@ public class MarvelApiService {
     private static final int LOADED_CHARACTERS_NUMBER = 10;
 
     //TODO inject with Dagger
-    private MarvelApi marvelApi = MarvelApi.Factory.create(MarvelApi.BASE_URL);
+    private MarvelApi marvelApi;
 
     private String timestamp = String.valueOf(System.currentTimeMillis());
     private String hash = HashCalculator.calculate(timestamp, MarvelApi.PRIVATE_KEY, MarvelApi.PUBLIC_KEY);
+
+    @Inject
+    public MarvelApiService(MarvelApi marvelApi) {
+        this.marvelApi = marvelApi;
+    }
 
     public void populateCharactersRecyclerView(int offset,
                                                Consumer<List<Character>> onNext,
@@ -71,7 +78,6 @@ public class MarvelApiService {
                 .map(ResponseData::getResults)
                 .subscribe(onNext, onError);
     }
-
 
 
 }

@@ -30,13 +30,7 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     private static final int TYPE_LOADING = 2;
     public static final String CHARACTER = "character";
 
-    private Context context;
-    private List<Character> characters;
-
-    public CharactersRecyclerViewAdapter(Context context) {
-        this.context = context;
-        this.characters = new ArrayList<>();
-    }
+    private List<Character> characters = new ArrayList<>();
 
     public void setCharacterItems(List<Character> characters) {
         this.characters.addAll(characters);
@@ -83,6 +77,7 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             CharacterRecyclerItemBinding binding = characterViewHolder.binding;
 
             binding.getRoot().setOnClickListener(view -> {
+                Context context = view.getContext();
                 Intent intent = new Intent(context, CharacterDetailActivity.class);
                 intent.putExtra(CHARACTER, character);
                 Pair imageTransition = Pair.create(binding.characterPhoto, context.getString(R.string.character_image_transition_name));

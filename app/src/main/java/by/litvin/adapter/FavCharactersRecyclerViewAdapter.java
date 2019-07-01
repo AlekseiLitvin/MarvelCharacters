@@ -1,23 +1,17 @@
 package by.litvin.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-
 import by.litvin.R;
+import by.litvin.databinding.CharacterRecyclerItemBinding;
 import by.litvin.model.Character;
-import by.litvin.model.Image;
 
 public class FavCharactersRecyclerViewAdapter extends ListAdapter<Character, FavCharactersRecyclerViewAdapter.CharacterHolder> {
 
@@ -45,45 +39,34 @@ public class FavCharactersRecyclerViewAdapter extends ListAdapter<Character, Fav
     @NonNull
     @Override
     public CharacterHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.character_recycler_item, parent, false);
-        return new CharacterHolder(cardView);
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        CharacterRecyclerItemBinding binding =
+                DataBindingUtil.inflate(layoutInflater, R.layout.character_recycler_item, parent, false);
+        return new CharacterHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CharacterHolder holder, int position) {
         Character character = getItem(position);
-        holder.characterName.setText(character.getName());
-        holder.characterDescription.setText(character.getDescription());
+        holder.bind(character);
 
-        Image characterThumbnail = character.getThumbnail();
-        if (characterThumbnail != null) {
-            String imageUrl = String.format("%s.%s", characterThumbnail.getPath(), characterThumbnail.getExtension());
-            RequestOptions options = new RequestOptions()
-                    .centerCrop()
-                    .error(R.mipmap.ic_launcher_round);
-            //TODO load photos of lower resolution for recycler view
-            ImageView characterImage = holder.characterImage;
-            Glide.with(characterImage.getContext())
-                    .load(imageUrl)
-                    .apply(options)
-                    .into(characterImage);
-        }
+        //TODO intent to CharacterDetailActivity
+        holder.binding.getRoot().setOnClickListener(view -> {
 
+        });
     }
 
     public class CharacterHolder extends RecyclerView.ViewHolder {
-        TextView characterName;
-        TextView characterDescription;
-        ImageView characterImage;
+        private CharacterRecyclerItemBinding binding;
 
-        public CharacterHolder(@NonNull View itemView) {
-            super(itemView);
-            characterName = itemView.findViewById(R.id.character_name);
-            characterDescription = itemView.findViewById(R.id.character_description);
-            characterImage = itemView.findViewById(R.id.character_photo);
-            itemView.setOnClickListener(view -> {
-                //TODO intent to CharacterDetailActivity
-            });
+        public CharacterHolder(CharacterRecyclerItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        public void bind(Character character) {
+            binding.setCharacter(character);
+            binding.executePendingBindings();
         }
     }
 }

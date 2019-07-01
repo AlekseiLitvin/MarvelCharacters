@@ -16,7 +16,7 @@ import by.litvin.model.Character;
 import by.litvin.model.Image;
 import by.litvin.model.Link;
 
-@Database(entities = {Character.class}, version = 3)
+@Database(entities = {Character.class}, version = 3, exportSchema = false)
 public abstract class CharacterDatabase extends RoomDatabase {
     private static CharacterDatabase instance;
 

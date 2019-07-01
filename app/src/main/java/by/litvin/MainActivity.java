@@ -23,9 +23,13 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import by.litvin.activity.FavCharacterActivity;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
 import by.litvin.callback.ItemTouchHelperCallback;
+import by.litvin.di.component.DaggerMainActivityComponent;
+import by.litvin.di.component.DaggerMarvelApiServiceComponent;
 import by.litvin.model.Character;
 import by.litvin.service.MarvelApiService;
 import io.reactivex.functions.Consumer;
@@ -38,15 +42,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int offset = 0;
     private boolean isLoading = false;
 
-    private CharactersRecyclerViewAdapter charactersRecyclerViewAdapter;
     private DrawerLayout drawerLayout;
-    private MarvelApiService marvelApiService = new MarvelApiService(); //TODO Inject using dagger
+
+    @Inject
+    CharactersRecyclerViewAdapter charactersRecyclerViewAdapter;
+    @Inject
+    MarvelApiService marvelApiService; //TODO Inject using dagger
+
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
             LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            //TODO add condition to load characters erliers (eg +3 or +4 )
             if (!isLoading && linearLayoutManager.getItemCount() == (linearLayoutManager.findLastVisibleItemPosition() + 1)) {
                 isLoading = true;
                 offset += DEFAULT_OFFSET;
@@ -73,7 +82,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar_recycler_view);
         setSupportActionBar(toolbar);
 
-        charactersRecyclerViewAdapter = new CharactersRecyclerViewAdapter(this);
+        DaggerMainActivityComponent.builder()
+                .marvelApiServiceComponent(DaggerMarvelApiServiceComponent.create())
+                .build()
+                .injectMainActivity(this);
+
         RecyclerView recyclerView = findViewById(R.id.characters_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(charactersRecyclerViewAdapter);
