@@ -11,8 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import javax.inject.Inject;
+
 import by.litvin.R;
 import by.litvin.adapter.FavCharactersRecyclerViewAdapter;
+import by.litvin.di.component.DaggerFavCharactersActivityComponent;
 import by.litvin.model.Character;
 import by.litvin.viewmodel.CharacterViewModel;
 
@@ -21,16 +24,20 @@ public class FavCharacterActivity extends AppCompatActivity {
     //TODO inject all CharacterViewModel using Dagger
     private CharacterViewModel characterViewModel;
     private RecyclerView recyclerView;
-    private FavCharactersRecyclerViewAdapter favCharactersRecyclerViewAdapter;
+    @Inject
+    FavCharactersRecyclerViewAdapter favCharactersRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fav_character);
+        DaggerFavCharactersActivityComponent.builder()
+                .build()
+                .inject(this);
+
 
         recyclerView = findViewById(R.id.favorite_characters_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        favCharactersRecyclerViewAdapter = new FavCharactersRecyclerViewAdapter();
         recyclerView.setAdapter(favCharactersRecyclerViewAdapter);
 
         characterViewModel = ViewModelProviders.of(this).get(CharacterViewModel.class);

@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import by.litvin.activity.FavCharacterActivity;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
 import by.litvin.callback.ItemTouchHelperCallback;
-import by.litvin.di.component.DaggerMainActivityComponent;
 import by.litvin.di.component.DaggerMarvelApiServiceComponent;
 import by.litvin.model.Character;
 import by.litvin.service.MarvelApiService;

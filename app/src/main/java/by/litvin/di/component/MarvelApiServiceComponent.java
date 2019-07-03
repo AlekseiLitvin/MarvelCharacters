@@ -10,6 +10,8 @@ public interface MarvelApiServiceComponent {
 
     MarvelApi marvelApi();
 
+    MarvelApiService marvelApiService();
+
     void inject(MarvelApiService marvelApiService);
 
 }
