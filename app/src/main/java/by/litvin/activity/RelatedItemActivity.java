@@ -26,7 +26,7 @@ public class RelatedItemActivity extends AppCompatActivity {
 
 
         ViewPager viewPager = findViewById(R.id.related_item_view_pager);
-        viewPager.setAdapter(new RelatedItemPagerAdapter(this, relatedItems));
+        viewPager.setAdapter(new RelatedItemPagerAdapter(relatedItems));
         viewPager.setCurrentItem(position);
     }
 

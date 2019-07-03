@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean isLoading = false;
 
     private CharactersRecyclerViewAdapter charactersRecyclerViewAdapter;
-    private RecyclerView recyclerView;
     private DrawerLayout drawerLayout;
     private MarvelApiService marvelApiService = new MarvelApiService(); //TODO Inject using dagger
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
@@ -48,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onScrolled(recyclerView, dx, dy);
 
             LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            //TODO add condition to load characters earlier (eg +3 or +4 )
             if (!isLoading && linearLayoutManager.getItemCount() == (linearLayoutManager.findLastVisibleItemPosition() + 1)) {
                 isLoading = true;
                 offset += DEFAULT_OFFSET;
@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar_recycler_view);
         setSupportActionBar(toolbar);
 
-        charactersRecyclerViewAdapter = new CharactersRecyclerViewAdapter(this);
-        recyclerView = findViewById(R.id.characters_recycler_view);
+        charactersRecyclerViewAdapter = new CharactersRecyclerViewAdapter();
+        RecyclerView recyclerView = findViewById(R.id.characters_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(charactersRecyclerViewAdapter);
         recyclerView.addOnScrollListener(scrollListener);

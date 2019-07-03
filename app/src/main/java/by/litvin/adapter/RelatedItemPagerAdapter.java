@@ -1,6 +1,5 @@
 package by.litvin.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,9 @@ import by.litvin.model.RelatedItem;
 
 public class RelatedItemPagerAdapter extends PagerAdapter {
 
-    private Context context;
     private List<RelatedItem> relatedItems;
 
-    public RelatedItemPagerAdapter(Context context, List<RelatedItem> relatedItems) {
-        this.context = context;
+    public RelatedItemPagerAdapter(List<RelatedItem> relatedItems) {
         this.relatedItems = relatedItems;
     }
 
