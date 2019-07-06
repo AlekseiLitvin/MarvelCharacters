@@ -21,7 +21,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -137,12 +136,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.random_character:
                 AtomicReference<Character> character = new AtomicReference<>();
                 Consumer<List<Character>> onNext = characters -> {
-                    System.out.println("Get character completed " + Calendar.getInstance().getTime());
                     character.set(characters.get(0));
                 };
 
                 Action onComplete = () -> {
-                    System.out.println("Starting activity " + Calendar.getInstance().getTime());
                     intent.setClass(this, CharacterDetailActivity.class);
                     intent.putExtra(CHARACTER, character.get());
                     startActivity(intent);
