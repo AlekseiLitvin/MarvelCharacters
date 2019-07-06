@@ -21,15 +21,21 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
+import by.litvin.activity.CharacterDetailActivity;
 import by.litvin.activity.FavCharacterActivity;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
 import by.litvin.callback.ItemTouchHelperCallback;
 import by.litvin.model.Character;
 import by.litvin.service.MarvelApiService;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.internal.functions.Functions;
+
+import static by.litvin.adapter.CharactersRecyclerViewAdapter.CHARACTER;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -122,10 +128,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Intent intent = new Intent();
         switch (menuItem.getItemId()) {
             case R.id.favorite_characters:
-                Intent intent = new Intent(this, FavCharacterActivity.class);
+                intent.setClass(this, FavCharacterActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.random_character:
+                AtomicReference<Character> character = new AtomicReference<>();
+                Consumer<List<Character>> onNext = characters -> {
+                    System.out.println("Get character completed " + Calendar.getInstance().getTime());
+                    character.set(characters.get(0));
+                };
+
+                Action onComplete = () -> {
+                    System.out.println("Starting activity " + Calendar.getInstance().getTime());
+                    intent.setClass(this, CharacterDetailActivity.class);
+                    intent.putExtra(CHARACTER, character.get());
+                    startActivity(intent);
+                };
+                marvelApiService.getRandomCharacter(onNext, Throwable::printStackTrace, onComplete); //TODO implement loading circle
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);

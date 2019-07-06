@@ -5,6 +5,8 @@ import by.litvin.model.Character;
 import by.litvin.model.RelatedItem;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -35,28 +37,35 @@ public interface MarvelApi {
 
     @GET("characters/{characterId}/comics")
     Observable<ApiResponse<RelatedItem>> getComicsWithCharacter(@Path("characterId") int characterId,
+                                                                @Query("limit") long limit,
                                                                 @Query("ts") String timestamp,
                                                                 @Query("apikey") String apikey,
                                                                 @Query("hash") String hash);
 
     @GET("characters/{characterId}/series")
     Observable<ApiResponse<RelatedItem>> getSeriesWithCharacter(@Path("characterId") int characterId,
+                                                                @Query("limit") long limit,
                                                                 @Query("ts") String timestamp,
                                                                 @Query("apikey") String apikey,
                                                                 @Query("hash") String hash);
 
     @GET("characters/{characterId}/events")
     Observable<ApiResponse<RelatedItem>> getEventsWithCharacter(@Path("characterId") int characterId,
+                                                                @Query("limit") long limit,
                                                                 @Query("ts") String timestamp,
                                                                 @Query("apikey") String apikey,
                                                                 @Query("hash") String hash);
 
     class Factory {
         public static MarvelApi create(String baseUrl) {
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+            OkHttpClient okHttpClient = new OkHttpClient().newBuilder().addInterceptor(httpLoggingInterceptor).build();
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(okHttpClient)
                     .build();
             return retrofit.create(MarvelApi.class);
         }

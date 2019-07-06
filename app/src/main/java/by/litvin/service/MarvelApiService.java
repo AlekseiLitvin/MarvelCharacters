@@ -1,6 +1,8 @@
 package by.litvin.service;
 
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 import by.litvin.api.MarvelApi;
 import by.litvin.model.ApiResponse;
@@ -16,10 +18,10 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MarvelApiService {
 
+    public static final int RELATED_ITEMS_LIMIT = 5;
     //TODO move properties to separate file
-    private static final int LOADED_CHARACTERS_NUMBER = 10;
-
-    //TODO inject with Dagger
+    private static final int CHARACTER_LIMIT = 10;
+    private static final int RANDOM_CHARACTER_LIMIT = 1;
     private MarvelApi marvelApi = MarvelApi.Factory.create(MarvelApi.BASE_URL);
 
     private String timestamp = String.valueOf(System.currentTimeMillis());
@@ -29,12 +31,24 @@ public class MarvelApiService {
                                                Consumer<List<Character>> onNext,
                                                Consumer<Throwable> onError,
                                                Action onComplete) {
-        marvelApi.getAllCharacters(LOADED_CHARACTERS_NUMBER, offset, timestamp, MarvelApi.PUBLIC_KEY, hash)
+
+        getCharactersWithOffset(offset, CHARACTER_LIMIT, onNext, onError, onComplete);
+    }
+
+    public void getRandomCharacter(Consumer<List<Character>> onNext,
+                                   Consumer<Throwable> onError,
+                                   Action onComplete) {
+        AtomicReference<Integer> total = new AtomicReference<>(0);
+        Action onTotalComplete = () -> {
+            int randomCharacterOffset = new Random().nextInt(total.get() + 1);
+            getCharactersWithOffset(randomCharacterOffset, RANDOM_CHARACTER_LIMIT, onNext, onError, onComplete);
+        };
+        marvelApi.getAllCharacters(RANDOM_CHARACTER_LIMIT, 0, timestamp, MarvelApi.PUBLIC_KEY, hash)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(characterApiResponse -> characterApiResponse.getData())
-                .map(ResponseData::getResults)
-                .subscribe(onNext, onError, onComplete); //TODO add error handling logic
+                .map(ApiResponse::getData)
+                .map(ResponseData::getTotal)
+                .subscribe(result -> total.set(result), Throwable::printStackTrace, onTotalComplete);
     }
 
 
@@ -42,7 +56,7 @@ public class MarvelApiService {
                                            Consumer<List<RelatedItem>> onNext,
                                            Consumer<Throwable> onError) {
         Observable<ApiResponse<RelatedItem>> comicsWithCharacter =
-                marvelApi.getComicsWithCharacter(characterId, timestamp, MarvelApi.PUBLIC_KEY, hash);
+                marvelApi.getComicsWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
         subscribeRelatedItems(comicsWithCharacter, onNext, onError);
     }
 
@@ -50,7 +64,7 @@ public class MarvelApiService {
                                            Consumer<List<RelatedItem>> onNext,
                                            Consumer<Throwable> onError) {
         Observable<ApiResponse<RelatedItem>> seriesWithCharacter =
-                marvelApi.getSeriesWithCharacter(characterId, timestamp, MarvelApi.PUBLIC_KEY, hash);
+                marvelApi.getSeriesWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
         subscribeRelatedItems(seriesWithCharacter, onNext, onError);
     }
 
@@ -58,7 +72,7 @@ public class MarvelApiService {
                                            Consumer<List<RelatedItem>> onNext,
                                            Consumer<Throwable> onError) {
         Observable<ApiResponse<RelatedItem>> eventsWithCharacter =
-                marvelApi.getEventsWithCharacter(characterId, timestamp, MarvelApi.PUBLIC_KEY, hash);
+                marvelApi.getEventsWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
         subscribeRelatedItems(eventsWithCharacter, onNext, onError);
     }
 
@@ -72,6 +86,17 @@ public class MarvelApiService {
                 .subscribe(onNext, onError);
     }
 
-
+    private void getCharactersWithOffset(int offset,
+                                         int characterLimit,
+                                         Consumer<List<Character>> onNext,
+                                         Consumer<Throwable> onError,
+                                         Action onComplete) {
+        marvelApi.getAllCharacters(characterLimit, offset, timestamp, MarvelApi.PUBLIC_KEY, hash)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(ApiResponse::getData)
+                .map(ResponseData::getResults)
+                .subscribe(onNext, onError, onComplete); //TODO add error handling logic
+    }
 
 }
