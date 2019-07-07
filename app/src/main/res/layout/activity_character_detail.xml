@@ -5,6 +5,7 @@
 
     <data>
 
+        <import type="android.text.TextUtils" />
         <variable
             name="comics"
             type="java.util.List&lt;by.litvin.model.RelatedItem&gt;" />
@@ -16,6 +17,10 @@
         <variable
             name="events"
             type="java.util.List&lt;by.litvin.model.RelatedItem&gt;" />
+
+        <variable
+            name="character"
+            type="by.litvin.model.Character" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -35,6 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
+                app:title="@{character.name}"
                 app:contentScrim="?attr/colorPrimary"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Character.Name"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -46,7 +52,9 @@
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     android:transitionName="@string/character_image_transition_name"
-                    app:layout_collapseMode="parallax" />
+                    app:characterImage='@{character.thumbnail.path + "." + character.thumbnail.extension}'
+                    app:layout_collapseMode="parallax"
+                    tools:ignore="ContentDescription" />
 
                 <!--//TODO try collapse mode = parallax-->
                 <androidx.appcompat.widget.Toolbar
@@ -83,6 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/character_activity_margin"
                     android:layout_marginEnd="@dimen/character_activity_margin"
+                    android:text="@{TextUtils.isEmpty(character.description) ? @string/description_is_not_available : character.description}"
                     android:layout_marginBottom="@dimen/character_activity_margin" />
 
                 <!--Comics-->
@@ -103,7 +112,10 @@
                         android:id="@+id/comics_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/related_item_layout_height"
-                        android:layout_marginBottom="@dimen/character_activity_margin" />
+                        android:layout_marginBottom="@dimen/character_activity_margin"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/related_entities_recycler_item" />
                 </LinearLayout>
 
                 <!--Series-->
@@ -124,7 +136,10 @@
                         android:id="@+id/series_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/related_item_layout_height"
-                        android:layout_marginBottom="@dimen/character_activity_margin" />
+                        android:layout_marginBottom="@dimen/character_activity_margin"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/related_entities_recycler_item" />
                 </LinearLayout>
 
                 <!--Events-->
@@ -145,7 +160,10 @@
                         android:id="@+id/events_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/related_item_layout_height"
-                        android:layout_marginBottom="@dimen/character_activity_margin" />
+                        android:layout_marginBottom="@dimen/character_activity_margin"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/related_entities_recycler_item" />
                 </LinearLayout>
 
                 <View

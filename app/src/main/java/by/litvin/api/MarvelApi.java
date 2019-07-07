@@ -60,7 +60,9 @@ public interface MarvelApi {
         public static MarvelApi create(String baseUrl) {
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
-            OkHttpClient okHttpClient = new OkHttpClient().newBuilder().addInterceptor(httpLoggingInterceptor).build();
+            OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                    .addInterceptor(httpLoggingInterceptor)
+                    .build();
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())

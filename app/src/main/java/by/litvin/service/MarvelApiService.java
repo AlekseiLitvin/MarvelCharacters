@@ -52,38 +52,16 @@ public class MarvelApiService {
     }
 
 
-    public void populateComicsRecyclerView(int characterId,
-                                           Consumer<List<RelatedItem>> onNext,
-                                           Consumer<Throwable> onError) {
-        Observable<ApiResponse<RelatedItem>> comicsWithCharacter =
-                marvelApi.getComicsWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
-        subscribeRelatedItems(comicsWithCharacter, onNext, onError);
+    public Observable<ApiResponse<RelatedItem>> getComicsForCharacter(int characterId) {
+        return marvelApi.getComicsWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
     }
 
-    public void populateSeriesRecyclerView(int characterId,
-                                           Consumer<List<RelatedItem>> onNext,
-                                           Consumer<Throwable> onError) {
-        Observable<ApiResponse<RelatedItem>> seriesWithCharacter =
-                marvelApi.getSeriesWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
-        subscribeRelatedItems(seriesWithCharacter, onNext, onError);
+    public Observable<ApiResponse<RelatedItem>> getSeriesForCharacter(int characterId) {
+        return marvelApi.getSeriesWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
     }
 
-    public void populateEventsRecyclerView(int characterId,
-                                           Consumer<List<RelatedItem>> onNext,
-                                           Consumer<Throwable> onError) {
-        Observable<ApiResponse<RelatedItem>> eventsWithCharacter =
-                marvelApi.getEventsWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
-        subscribeRelatedItems(eventsWithCharacter, onNext, onError);
-    }
-
-    private void subscribeRelatedItems(Observable<ApiResponse<RelatedItem>> observable,
-                                       Consumer<List<RelatedItem>> onNext,
-                                       Consumer<Throwable> onError) {
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(ApiResponse::getData)
-                .map(ResponseData::getResults)
-                .subscribe(onNext, onError);
+    public Observable<ApiResponse<RelatedItem>> getEventsForCharacter(int characterId) {
+        return marvelApi.getEventsWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
     }
 
     private void getCharactersWithOffset(int offset,

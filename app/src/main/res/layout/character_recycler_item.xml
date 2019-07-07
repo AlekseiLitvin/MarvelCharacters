@@ -60,7 +60,7 @@
                 android:layout_toEndOf="@id/character_photo"
                 android:ellipsize="end"
                 android:maxLines="3"
-                android:text="@{TextUtils.isEmpty(character.description) ? @string/no_data_available : character.description}" />
+                android:text="@{TextUtils.isEmpty(character.description) ? @string/no_description_available : character.description}" />
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

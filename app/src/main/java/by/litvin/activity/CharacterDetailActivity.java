@@ -3,51 +3,62 @@ package by.litvin.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.ImageView;
+import android.view.MenuItem;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-
+import java.util.List;
 import java.util.Objects;
 
 import by.litvin.R;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
 import by.litvin.adapter.RelatedItemRecyclerViewAdapter;
 import by.litvin.constant.LinkType;
+import by.litvin.databinding.ActivityCharacterDetailBinding;
+import by.litvin.model.ApiResponse;
 import by.litvin.model.Character;
-import by.litvin.model.Image;
 import by.litvin.model.Link;
+import by.litvin.model.RelatedItem;
+import by.litvin.model.ResponseData;
 import by.litvin.service.MarvelApiService;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class CharacterDetailActivity extends AppCompatActivity {
 
-    //TODO inject using dagger
-    private MarvelApiService marvelApiService = new MarvelApiService();
+    private MarvelApiService marvelApiService;
+
+    public CharacterDetailActivity() {
+        marvelApiService = new MarvelApiService();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_character_detail);
+        ActivityCharacterDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_character_detail);
+
         Toolbar toolbar = findViewById(R.id.character_image_toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         Character character = getIntent().getParcelableExtra(CharactersRecyclerViewAdapter.CHARACTER);
+        binding.setCharacter(character);
 
-        populateToolbar(character);
-        populateCharacterDescription(character);
         populateRelatedItems(character);
         populateRelatedLinks(character);
-
     }
 
+    //TODO rewrite links to data binding and add additional links
     private void populateRelatedLinks(Character character) {
         TextView textView = findViewById(R.id.wiki_page_link);
         textView.setOnClickListener(view -> {
@@ -62,49 +73,55 @@ public class CharacterDetailActivity extends AppCompatActivity {
     }
 
     private void populateRelatedItems(Character character) {
-        RecyclerView comicsRecyclerView = findViewById(R.id.comics_recycler_view);
-        RelatedItemRecyclerViewAdapter comicsRecyclerViewAdapter = new RelatedItemRecyclerViewAdapter(this);
-        comicsRecyclerView.setAdapter(comicsRecyclerViewAdapter);
-        comicsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        marvelApiService.populateComicsRecyclerView(character.getId(),
+        int characterId = character.getId();
+
+        Observable<ApiResponse<RelatedItem>> comicsForCharacter = marvelApiService.getComicsForCharacter(characterId);
+        RelatedItemRecyclerViewAdapter comicsRecyclerViewAdapter = createRecyclerViewWithAdapter(R.id.comics_recycler_view);
+        subscribeRelatedItems(comicsForCharacter,
                 comicsRecyclerViewAdapter::addRelatedItems,
-                Throwable::printStackTrace);
+                Throwable::printStackTrace,
+                Functions.EMPTY_ACTION); //TODO add progress bar
 
-        RecyclerView seriesRecyclerView = findViewById(R.id.series_recycler_view);
-        RelatedItemRecyclerViewAdapter seriesRecyclerViewAdapter = new RelatedItemRecyclerViewAdapter(this);
-        seriesRecyclerView.setAdapter(seriesRecyclerViewAdapter);
-        seriesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        marvelApiService.populateSeriesRecyclerView(character.getId(),
+        Observable<ApiResponse<RelatedItem>> seriesForCharacter = marvelApiService.getSeriesForCharacter(characterId);
+        RelatedItemRecyclerViewAdapter seriesRecyclerViewAdapter = createRecyclerViewWithAdapter(R.id.series_recycler_view);
+        subscribeRelatedItems(seriesForCharacter,
                 seriesRecyclerViewAdapter::addRelatedItems,
-                Throwable::printStackTrace);
+                Throwable::printStackTrace,
+                Functions.EMPTY_ACTION); //TODO add progress bar
 
-        RecyclerView eventsRecyclerView = findViewById(R.id.events_recycler_view);
-        RelatedItemRecyclerViewAdapter eventsRecyclerViewAdapter = new RelatedItemRecyclerViewAdapter(this);
-        eventsRecyclerView.setAdapter(eventsRecyclerViewAdapter);
-        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        marvelApiService.populateEventsRecyclerView(character.getId(),
+        Observable<ApiResponse<RelatedItem>> eventsForCharacter = marvelApiService.getEventsForCharacter(characterId);
+        RelatedItemRecyclerViewAdapter eventsRecyclerViewAdapter = createRecyclerViewWithAdapter(R.id.events_recycler_view);
+        subscribeRelatedItems(eventsForCharacter,
                 eventsRecyclerViewAdapter::addRelatedItems,
-                Throwable::printStackTrace);
+                Throwable::printStackTrace,
+                Functions.EMPTY_ACTION); //TODO add progress bar
     }
 
-    private void populateCharacterDescription(Character character) {
-        TextView characterDescription = findViewById(R.id.character_description);
-        //TODO implement default value for TextView, if value is null
-        String description = character.getDescription();
-        characterDescription.setText(description.isEmpty() ?
-                getResources().getString(R.string.description_is_not_available) : description);
+    public RelatedItemRecyclerViewAdapter createRecyclerViewWithAdapter(@IdRes int id) {
+        RecyclerView recyclerView = findViewById(id);
+        RelatedItemRecyclerViewAdapter recyclerViewAdapter = new RelatedItemRecyclerViewAdapter(this);
+        recyclerView.setAdapter(recyclerViewAdapter);
+        return recyclerViewAdapter;
     }
 
-    private void populateToolbar(Character character) {
-        Image characterThumbnail = character.getThumbnail();
-        String imageUrl = String.format("%s.%s", characterThumbnail.getPath(), characterThumbnail.getExtension());
-        ImageView characterImage = findViewById(R.id.big_character_image);
-
-        Glide.with(this)
-                .load(imageUrl)
-                .into(characterImage);
-        //TODO implement back button on toolbar
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.character_detail_toolbar);
-        collapsingToolbarLayout.setTitle(character.getName());
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
+
+    private void subscribeRelatedItems(Observable<ApiResponse<RelatedItem>> observable,
+                                       Consumer<List<RelatedItem>> onNext,
+                                       Consumer<Throwable> onError,
+                                       Action onComplete) {
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(ApiResponse::getData)
+                .map(ResponseData::getResults)
+                .subscribe(onNext, onError, onComplete);
+    }
+
 }
