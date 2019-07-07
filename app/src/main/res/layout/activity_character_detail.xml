@@ -6,17 +6,6 @@
     <data>
 
         <import type="android.text.TextUtils" />
-        <variable
-            name="comics"
-            type="java.util.List&lt;by.litvin.model.RelatedItem&gt;" />
-
-        <variable
-            name="series"
-            type="java.util.List&lt;by.litvin.model.RelatedItem&gt;" />
-
-        <variable
-            name="events"
-            type="java.util.List&lt;by.litvin.model.RelatedItem&gt;" />
 
         <variable
             name="character"
@@ -40,10 +29,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                app:title="@{character.name}"
                 app:contentScrim="?attr/colorPrimary"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Character.Name"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:title="@{character.name}">
 
                 <ImageView
                     android:id="@+id/big_character_image"
@@ -91,8 +80,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/character_activity_margin"
                     android:layout_marginEnd="@dimen/character_activity_margin"
-                    android:text="@{TextUtils.isEmpty(character.description) ? @string/description_is_not_available : character.description}"
-                    android:layout_marginBottom="@dimen/character_activity_margin" />
+                    android:layout_marginBottom="@dimen/character_activity_margin"
+                    android:text="@{TextUtils.isEmpty(character.description) ? @string/description_is_not_available : character.description}" />
 
                 <!--Comics-->
                 <LinearLayout
@@ -108,14 +97,26 @@
                         android:layout_marginBottom="@dimen/character_activity_margin"
                         android:text="@string/comics_title" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/comics_recycler_view"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/related_item_layout_height"
-                        android:layout_marginBottom="@dimen/character_activity_margin"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/related_entities_recycler_item" />
+                        android:layout_height="@dimen/related_item_layout_height">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/comics_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/character_activity_margin"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/related_entities_recycler_item" />
+
+                        <ProgressBar
+                            android:id="@+id/comics_progress_bar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+                    </FrameLayout>
+
                 </LinearLayout>
 
                 <!--Series-->
@@ -132,14 +133,26 @@
                         android:layout_marginBottom="@dimen/character_activity_margin"
                         android:text="@string/series_title" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/series_recycler_view"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/related_item_layout_height"
-                        android:layout_marginBottom="@dimen/character_activity_margin"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/related_entities_recycler_item" />
+                        android:gravity="center">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/series_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/character_activity_margin"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/related_entities_recycler_item" />
+
+                        <ProgressBar
+                            android:id="@+id/series_progress_bar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+                    </FrameLayout>
                 </LinearLayout>
 
                 <!--Events-->
@@ -156,14 +169,26 @@
                         android:layout_marginBottom="@dimen/character_activity_margin"
                         android:text="@string/events_title" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/events_recycler_view"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/related_item_layout_height"
-                        android:layout_marginBottom="@dimen/character_activity_margin"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/related_entities_recycler_item" />
+                        android:gravity="center">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/events_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/character_activity_margin"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/related_entities_recycler_item" />
+
+                        <ProgressBar
+                            android:id="@+id/events_progress_bar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+                    </FrameLayout>
                 </LinearLayout>
 
                 <View

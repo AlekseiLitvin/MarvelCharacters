@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
@@ -30,7 +32,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.internal.functions.Functions;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -80,21 +81,21 @@ public class CharacterDetailActivity extends AppCompatActivity {
         subscribeRelatedItems(comicsForCharacter,
                 comicsRecyclerViewAdapter::addRelatedItems,
                 Throwable::printStackTrace,
-                Functions.EMPTY_ACTION); //TODO add progress bar
+                handleRequestProgress(R.id.comics_progress_bar, R.id.comics_recycler_view));
 
         Observable<ApiResponse<RelatedItem>> seriesForCharacter = marvelApiService.getSeriesForCharacter(characterId);
         RelatedItemRecyclerViewAdapter seriesRecyclerViewAdapter = createRecyclerViewWithAdapter(R.id.series_recycler_view);
         subscribeRelatedItems(seriesForCharacter,
                 seriesRecyclerViewAdapter::addRelatedItems,
                 Throwable::printStackTrace,
-                Functions.EMPTY_ACTION); //TODO add progress bar
+                handleRequestProgress(R.id.series_progress_bar, R.id.series_recycler_view));
 
         Observable<ApiResponse<RelatedItem>> eventsForCharacter = marvelApiService.getEventsForCharacter(characterId);
         RelatedItemRecyclerViewAdapter eventsRecyclerViewAdapter = createRecyclerViewWithAdapter(R.id.events_recycler_view);
         subscribeRelatedItems(eventsForCharacter,
                 eventsRecyclerViewAdapter::addRelatedItems,
                 Throwable::printStackTrace,
-                Functions.EMPTY_ACTION); //TODO add progress bar
+                handleRequestProgress(R.id.events_progress_bar, R.id.events_recycler_view));
     }
 
     public RelatedItemRecyclerViewAdapter createRecyclerViewWithAdapter(@IdRes int id) {
@@ -111,6 +112,13 @@ public class CharacterDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Action handleRequestProgress(@IdRes int progressBarId, @IdRes int recyclerViewId) {
+        return () -> {
+            ProgressBar progressBar = findViewById(progressBarId);
+            progressBar.setVisibility(View.INVISIBLE);
+        };
     }
 
     private void subscribeRelatedItems(Observable<ApiResponse<RelatedItem>> observable,
