@@ -17,7 +17,6 @@ import retrofit2.http.Query;
 public interface MarvelApi {
 
     String BASE_URL = "http://gateway.marvel.com/v1/public/";
-    String DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ssZ"; //TODO
     String PUBLIC_KEY = "858961528d9190d6ef185e668599b761"; //TODO move into properties file, see - secure-preferences
     String PRIVATE_KEY = "b9e01a841a358218d6a31809a193111401da9674"; //TODO move into properties file - see secure-preferences
 

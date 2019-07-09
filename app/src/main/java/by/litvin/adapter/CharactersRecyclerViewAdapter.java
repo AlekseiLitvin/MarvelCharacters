@@ -23,7 +23,6 @@ import by.litvin.databinding.CharacterRecyclerItemBinding;
 import by.litvin.listeners.MoveAndSwipeListener;
 import by.litvin.model.Character;
 
-//TODO try to implement using ListAdapter
 public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MoveAndSwipeListener {
 
     public static final int TYPE_NORMAL = 1;
@@ -33,10 +32,9 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     private List<Character> characters = new ArrayList<>();
 
     public void setCharacterItems(List<Character> characters) {
+        int insertPosition = characters.size() + 1;
         this.characters.addAll(characters);
-
-        //TODO not a best way, change later (noitfy insert etc)
-        notifyDataSetChanged();
+        notifyItemRangeInserted(insertPosition, characters.size());
     }
 
     public void addNullDataForProgressBar() {
@@ -46,7 +44,7 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
     public void removeNullDataForProgressBar() {
         characters.remove(characters.size() - 1);
-        notifyItemInserted(characters.size());
+        notifyItemRemoved(characters.size());
     }
 
     public List<Character> getCharacters() {
@@ -103,13 +101,11 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        //TODO implement item move
         return false;
     }
 
     @Override
     public void onItemSwipe(int position) {
-        //TODO do something with swipe logic
         notifyDataSetChanged();
     }
 

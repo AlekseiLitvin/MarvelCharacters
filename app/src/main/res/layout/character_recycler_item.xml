@@ -22,9 +22,10 @@
         android:layout_height="100dp"
         android:layout_margin="5dp"
         card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="2dp">
+        card_view:cardElevation="4dp">
 
         <RelativeLayout
+            android:background="#FCC200"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

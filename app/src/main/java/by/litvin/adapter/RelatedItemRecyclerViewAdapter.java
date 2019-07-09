@@ -21,13 +21,11 @@ import by.litvin.activity.RelatedItemActivity;
 import by.litvin.databinding.RelatedEntitiesRecyclerItemBinding;
 import by.litvin.model.RelatedItem;
 
-//TODO refactor for series?
 public class RelatedItemRecyclerViewAdapter extends RecyclerView.Adapter<RelatedItemRecyclerViewAdapter.RelatedItemViewHolder> {
 
     public static final String POSITION = "Position";
     public static final String RELATED_ITEMS = "Related item";
 
-    //TODO change name and type
     private ArrayList<RelatedItem> relatedItems = new ArrayList<>();
     private Context context;
 

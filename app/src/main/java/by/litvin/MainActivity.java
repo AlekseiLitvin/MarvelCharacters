@@ -1,6 +1,7 @@
 package by.litvin;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import by.litvin.activity.CharacterDetailActivity;
 import by.litvin.activity.FavCharacterActivity;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
 import by.litvin.callback.ItemTouchHelperCallback;
+import by.litvin.constant.AppConstant;
 import by.litvin.model.Character;
 import by.litvin.service.MarvelApiService;
 import io.reactivex.functions.Action;
@@ -39,23 +41,22 @@ import static by.litvin.adapter.CharactersRecyclerViewAdapter.CHARACTER;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     //TODO move properties to separate file
-    private static final int DEFAULT_OFFSET = 10;
     private int offset = 0;
+    private int initialOffset = 0;
     private boolean isLoading = false;
 
     private CharactersRecyclerViewAdapter charactersRecyclerViewAdapter;
     private DrawerLayout drawerLayout;
-    private MarvelApiService marvelApiService = new MarvelApiService(); //TODO Inject using dagger
+    private MarvelApiService marvelApiService = new MarvelApiService();
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
             LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            //TODO add condition to load characters earlier (eg +3 or +4 )
-            if (!isLoading && linearLayoutManager.getItemCount() == (linearLayoutManager.findLastVisibleItemPosition() + 1)) {
+            if (!isLoading && linearLayoutManager.getItemCount() == (linearLayoutManager.findLastVisibleItemPosition() + 3)) {
                 isLoading = true;
-                offset += DEFAULT_OFFSET;
+                initialOffset += offset;
                 charactersRecyclerViewAdapter.addNullDataForProgressBar();
 
                 Consumer<List<Character>> onNext = response -> {
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     charactersRecyclerViewAdapter.setCharacterItems(response);
                 };
                 marvelApiService.populateCharactersRecyclerView(
-                        offset,
+                        initialOffset,
                         onNext,
                         Throwable::printStackTrace, //TODO add error handling logic
                         () -> isLoading = false);
@@ -79,13 +80,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar_recycler_view);
         setSupportActionBar(toolbar);
 
+        SharedPreferences sharedPreferences = getSharedPreferences(AppConstant.APP_PREFERENCES_FILE, MODE_PRIVATE);
+        offset = sharedPreferences.getInt(AppConstant.LOADED_CHARACTERS_NUMBER, AppConstant.DEFAULT_OFFSET);
+
         charactersRecyclerViewAdapter = new CharactersRecyclerViewAdapter();
         RecyclerView recyclerView = findViewById(R.id.characters_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(charactersRecyclerViewAdapter);
         recyclerView.addOnScrollListener(scrollListener);
 
-        ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelperCallback(charactersRecyclerViewAdapter, this);
+        ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelperCallback(charactersRecyclerViewAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -108,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .into(navHeaderLogo);
 
         marvelApiService.populateCharactersRecyclerView(
-                offset,
+                initialOffset,
                 response -> charactersRecyclerViewAdapter.setCharacterItems(response),
                 Throwable::printStackTrace,
                 Functions.EMPTY_ACTION);
@@ -116,9 +120,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.characters_swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.google_blue, R.color.google_green, R.color.google_red, R.color.google_yellow);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            offset += DEFAULT_OFFSET;
+            initialOffset += offset;
             marvelApiService.populateCharactersRecyclerView(
-                    offset,
+                    initialOffset,
                     response -> charactersRecyclerViewAdapter.setCharacterItems(response),
                     Throwable::printStackTrace,
                     () -> swipeRefreshLayout.setRefreshing(false));
@@ -144,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     intent.putExtra(CHARACTER, character.get());
                     startActivity(intent);
                 };
-                marvelApiService.getRandomCharacter(onNext, Throwable::printStackTrace, onComplete); //TODO implement loading circle
+                marvelApiService.getRandomCharacter(onNext, Throwable::printStackTrace, onComplete);
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);

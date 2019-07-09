@@ -18,7 +18,6 @@ import by.litvin.viewmodel.CharacterViewModel;
 
 public class FavCharacterActivity extends AppCompatActivity {
 
-    //TODO inject all CharacterViewModel using Dagger
     private CharacterViewModel characterViewModel;
     private RecyclerView recyclerView;
     private FavCharactersRecyclerViewAdapter favCharactersRecyclerViewAdapter;
@@ -36,7 +35,6 @@ public class FavCharacterActivity extends AppCompatActivity {
         characterViewModel = ViewModelProviders.of(this).get(CharacterViewModel.class);
         characterViewModel.getAllCharacters().observe(this, favCharactersRecyclerViewAdapter::submitList);
 
-        //TODO Remove copy-paste similar to ItemTouchHelperCallback#onChildDraw
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {

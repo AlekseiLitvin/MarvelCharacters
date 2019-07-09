@@ -1,5 +1,10 @@
 package by.litvin.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,8 +15,11 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import by.litvin.R;
+import by.litvin.activity.CharacterDetailActivity;
 import by.litvin.databinding.CharacterRecyclerItemBinding;
 import by.litvin.model.Character;
+
+import static by.litvin.adapter.CharactersRecyclerViewAdapter.CHARACTER;
 
 public class FavCharactersRecyclerViewAdapter extends ListAdapter<Character, FavCharactersRecyclerViewAdapter.CharacterHolder> {
 
@@ -50,9 +58,14 @@ public class FavCharactersRecyclerViewAdapter extends ListAdapter<Character, Fav
         Character character = getItem(position);
         holder.bind(character);
 
-        //TODO intent to CharacterDetailActivity
-        holder.binding.getRoot().setOnClickListener(view -> {
-
+        CharacterRecyclerItemBinding binding = holder.binding;
+        binding.getRoot().setOnClickListener(view -> {
+            Context context = view.getContext();
+            Intent intent = new Intent(context, CharacterDetailActivity.class);
+            intent.putExtra(CHARACTER, character);
+            Pair imageTransition = Pair.create(binding.characterPhoto, context.getString(R.string.character_image_transition_name));
+            context.startActivity(intent,
+                    ActivityOptions.makeSceneTransitionAnimation((Activity) context, imageTransition).toBundle());
         });
     }
 
