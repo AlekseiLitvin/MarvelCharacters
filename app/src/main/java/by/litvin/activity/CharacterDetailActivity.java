@@ -12,6 +12,7 @@ import androidx.annotation.IdRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -100,6 +101,9 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
     public RelatedItemRecyclerViewAdapter createRecyclerViewWithAdapter(@IdRes int id) {
         RecyclerView recyclerView = findViewById(id);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setHasFixedSize(true);
+        new LinearSnapHelper().attachToRecyclerView(recyclerView);
         RelatedItemRecyclerViewAdapter recyclerViewAdapter = new RelatedItemRecyclerViewAdapter(this);
         recyclerView.setAdapter(recyclerViewAdapter);
         return recyclerViewAdapter;
