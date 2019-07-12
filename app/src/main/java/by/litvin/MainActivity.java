@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //TODO move properties to separate file
     private int offset = 0;
-    private int initialOffset = 0;
+    private int currentOffset = 0;
     private boolean isLoading = false;
 
     private CharactersRecyclerViewAdapter charactersRecyclerViewAdapter;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             if (!isLoading && linearLayoutManager.getItemCount() == (linearLayoutManager.findLastVisibleItemPosition() + 3)) {
                 isLoading = true;
-                initialOffset += offset;
+                currentOffset += offset;
                 charactersRecyclerViewAdapter.addNullDataForProgressBar();
 
                 Consumer<List<Character>> onNext = response -> {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     charactersRecyclerViewAdapter.setCharacterItems(response);
                 };
                 marvelApiService.populateCharactersRecyclerView(
-                        initialOffset,
+                        currentOffset,
                         onNext,
                         Throwable::printStackTrace, //TODO add error handling logic
                         () -> isLoading = false);
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .into(navHeaderLogo);
 
         marvelApiService.populateCharactersRecyclerView(
-                initialOffset,
+                currentOffset,
                 response -> charactersRecyclerViewAdapter.setCharacterItems(response),
                 Throwable::printStackTrace,
                 Functions.EMPTY_ACTION);
@@ -120,9 +120,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.characters_swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.google_blue, R.color.google_green, R.color.google_red, R.color.google_yellow);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            initialOffset += offset;
+            currentOffset += offset;
             marvelApiService.populateCharactersRecyclerView(
-                    initialOffset,
+                    currentOffset,
                     response -> charactersRecyclerViewAdapter.setCharacterItems(response),
                     Throwable::printStackTrace,
                     () -> swipeRefreshLayout.setRefreshing(false));
