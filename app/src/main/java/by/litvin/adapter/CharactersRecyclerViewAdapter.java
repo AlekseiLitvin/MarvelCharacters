@@ -34,7 +34,8 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     public void setCharacterItems(List<Character> characters) {
         int insertPosition = characters.size() + 1;
         this.characters.addAll(characters);
-        notifyItemRangeInserted(insertPosition, characters.size());
+//        notifyItemRangeInserted(insertPosition, characters.size());
+        notifyDataSetChanged();
     }
 
     public void addNullDataForProgressBar() {
