@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen>
-    <!--TODO implement preferences UI-->
-    <ListPreference>
-
-    </ListPreference>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="30"
+        android:dialogTitle="Choose vibration length"
+        android:entries="@array/vibration_length"
+        android:entryValues="@array/vibration_length_values"
+        android:key="vibrationLength"
+        android:summary="Change vibration event length"
+        android:title="Vibration length" />
+    <ListPreference
+        android:defaultValue="10"
+        android:dialogTitle="Loaded characters number"
+        android:entries="@array/character_offset"
+        android:entryValues="@array/character_offset_values"
+        android:key="loadedCharactersNumber"
+        android:summary="Change loaded characters number"
+        android:title="Loaded characters number" />
 </PreferenceScreen>

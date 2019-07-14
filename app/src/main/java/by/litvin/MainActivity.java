@@ -3,6 +3,7 @@ package by.litvin;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,9 +28,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import by.litvin.activity.CharacterDetailActivity;
 import by.litvin.activity.FavCharacterActivity;
+import by.litvin.activity.PreferencesActivity;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
 import by.litvin.callback.ItemTouchHelperCallback;
-import by.litvin.constant.AppConstant;
 import by.litvin.model.Character;
 import by.litvin.service.MarvelApiService;
 import io.reactivex.functions.Action;
@@ -72,6 +73,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     };
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        offset = Integer.parseInt(defaultSharedPreferences.getString(PreferencesActivity.LOADED_CHARACTERS_NUMBER, PreferencesActivity.DEFAULT_OFFSET));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar_recycler_view);
         setSupportActionBar(toolbar);
-
-        SharedPreferences sharedPreferences = getSharedPreferences(AppConstant.APP_PREFERENCES_FILE, MODE_PRIVATE);
-        offset = sharedPreferences.getInt(AppConstant.LOADED_CHARACTERS_NUMBER, AppConstant.DEFAULT_OFFSET);
 
         charactersRecyclerViewAdapter = new CharactersRecyclerViewAdapter();
         RecyclerView recyclerView = findViewById(R.id.characters_recycler_view);
@@ -135,6 +139,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (menuItem.getItemId()) {
             case R.id.favorite_characters:
                 intent.setClass(this, FavCharacterActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.app_settings_menu:
+                intent.setClass(this, PreferencesActivity.class);
                 startActivity(intent);
                 break;
             case R.id.random_character:

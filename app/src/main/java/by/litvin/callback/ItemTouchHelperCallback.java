@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,8 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import by.litvin.R;
+import by.litvin.activity.PreferencesActivity;
 import by.litvin.adapter.CharactersRecyclerViewAdapter;
-import by.litvin.constant.AppConstant;
 import by.litvin.listeners.MoveAndSwipeListener;
 import by.litvin.model.Character;
 import by.litvin.viewmodel.CharacterViewModel;
@@ -112,9 +113,8 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (dX > getFavouriteTriggerLength(itemView) && !isVibrationEventOccurred) {
             isVibrationEventOccurred = true;
             Vibrator vibrator = (Vibrator) itemView.getContext().getSystemService(Context.VIBRATOR_SERVICE);
-            SharedPreferences sharedPreferences =
-                    itemView.getContext().getSharedPreferences(AppConstant.APP_PREFERENCES_FILE, Context.MODE_PRIVATE);
-            int vibrationLength = sharedPreferences.getInt(AppConstant.VIBRATION_LENGTH, AppConstant.DEFAULT_VIBRATION_LENGTH);
+            SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(itemView.getContext());
+            int vibrationLength = Integer.parseInt(defaultSharedPreferences.getString(PreferencesActivity.VIBRATION_LENGTH, PreferencesActivity.DEFAULT_VIBRATION_LENGTH));
             vibrator.vibrate(vibrationLength);
         }
         if (dX == 0) {
