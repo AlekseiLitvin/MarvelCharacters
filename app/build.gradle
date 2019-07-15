@@ -27,8 +27,8 @@ android {
 
 
 android.buildTypes.each { type ->
-    type.buildConfigField "String", "PRIVATE_KEY", "$publicKey"
-    type.buildConfigField "String", "PUBLIC_KEY", "$privateKey"
+    type.buildConfigField "String", "PRIVATE_KEY", "$privateKey"
+    type.buildConfigField "String", "PUBLIC_KEY", "$publicKey"
 }
 
 dependencies {

@@ -34,7 +34,7 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:transitionName="@string/character_image_transition_name"
-                app:characterImage='@{character.thumbnail.path + "." + character.thumbnail.extension}'
+                app:characterImage='@{character.thumbnail.path + "/standard_xlarge" + "." + character.thumbnail.extension}'
                 tools:ignore="ContentDescription" />
 
             <TextView

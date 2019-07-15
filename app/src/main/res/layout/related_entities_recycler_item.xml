@@ -32,7 +32,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
                 android:transitionName="@{@string/big_related_item_transition + position}"
-                app:relatedItemImage='@{relatedItem.thumbnail.path + "." + relatedItem.thumbnail.extension}' />
+                app:relatedItemImage='@{relatedItem.thumbnail.path + "/portrait_medium" + "." + relatedItem.thumbnail.extension}' />
 
             <TextView
                 android:id="@+id/related_item_text"

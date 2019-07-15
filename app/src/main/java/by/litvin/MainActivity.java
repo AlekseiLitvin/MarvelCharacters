@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private CharactersRecyclerViewAdapter charactersRecyclerViewAdapter;
     private DrawerLayout drawerLayout;
-    private MarvelApiService marvelApiService = new MarvelApiService(this);
+    private MarvelApiService marvelApiService;
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(charactersRecyclerViewAdapter);
         recyclerView.addOnScrollListener(scrollListener);
+
+        marvelApiService = new MarvelApiService(this);
 
         ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelperCallback(charactersRecyclerViewAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);

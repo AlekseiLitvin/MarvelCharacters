@@ -40,10 +40,6 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
     private MarvelApiService marvelApiService;
 
-    public CharacterDetailActivity() {
-        marvelApiService = new MarvelApiService(this);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +70,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
     }
 
     private void populateRelatedItems(Character character) {
+        marvelApiService = new MarvelApiService(this);
         int characterId = character.getId();
 
         Observable<ApiResponse<RelatedItem>> comicsForCharacter = marvelApiService.getComicsForCharacter(characterId);
