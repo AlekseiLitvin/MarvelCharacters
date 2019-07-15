@@ -33,8 +33,8 @@ public class RelatedItemRecyclerViewAdapter extends RecyclerView.Adapter<Related
         this.context = context;
     }
 
-    public void addRelatedItems(List<RelatedItem> comics) {
-        this.relatedItems.addAll(comics);
+    public void addRelatedItems(List<RelatedItem> relatedItem) {
+        this.relatedItems.addAll(relatedItem);
         notifyDataSetChanged();
     }
 
