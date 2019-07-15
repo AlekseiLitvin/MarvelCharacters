@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MarvelApiService {
 
     private int characterLimit;
-    private static final int RELATED_ITEMS_LIMIT = 5;
+    private static final int RELATED_ITEMS_LIMIT = 10;
     private static final int RANDOM_CHARACTER_LIMIT = 1;
     private MarvelApi marvelApi;
 
