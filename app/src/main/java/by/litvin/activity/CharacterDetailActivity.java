@@ -41,7 +41,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
     private MarvelApiService marvelApiService;
 
     public CharacterDetailActivity() {
-        marvelApiService = new MarvelApiService();
+        marvelApiService = new MarvelApiService(this);
     }
 
     @Override
@@ -60,7 +60,6 @@ public class CharacterDetailActivity extends AppCompatActivity {
         populateRelatedLinks(character);
     }
 
-    //TODO rewrite links to data binding and add additional links
     private void populateRelatedLinks(Character character) {
         TextView textView = findViewById(R.id.wiki_page_link);
         textView.setOnClickListener(view -> {

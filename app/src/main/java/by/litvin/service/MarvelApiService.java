@@ -1,9 +1,15 @@
 package by.litvin.service;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
+import by.litvin.BuildConfig;
+import by.litvin.activity.PreferencesActivity;
 import by.litvin.api.MarvelApi;
 import by.litvin.model.ApiResponse;
 import by.litvin.model.Character;
@@ -18,21 +24,26 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MarvelApiService {
 
-    public static final int RELATED_ITEMS_LIMIT = 5;
-    //TODO move properties to separate file
-    private static final int CHARACTER_LIMIT = 10;
+    private int characterLimit;
+    private static final int RELATED_ITEMS_LIMIT = 5;
     private static final int RANDOM_CHARACTER_LIMIT = 1;
-    private MarvelApi marvelApi = MarvelApi.Factory.create(MarvelApi.BASE_URL);
+    private MarvelApi marvelApi;
 
     private String timestamp = String.valueOf(System.currentTimeMillis());
-    private String hash = HashCalculator.calculate(timestamp, MarvelApi.PRIVATE_KEY, MarvelApi.PUBLIC_KEY);
+    private String hash = HashCalculator.calculate(timestamp, BuildConfig.PRIVATE_KEY, BuildConfig.PUBLIC_KEY);
+
+    public MarvelApiService(Context context) {
+        this.marvelApi = MarvelApi.Factory.create(MarvelApi.BASE_URL);
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        characterLimit = Integer.parseInt(defaultSharedPreferences.getString(PreferencesActivity.LOADED_CHARACTERS_NUMBER, PreferencesActivity.DEFAULT_OFFSET));
+    }
 
     public void populateCharactersRecyclerView(int offset,
                                                Consumer<List<Character>> onNext,
                                                Consumer<Throwable> onError,
                                                Action onComplete) {
 
-        getCharactersWithOffset(offset, CHARACTER_LIMIT, onNext, onError, onComplete);
+        getCharactersWithOffset(offset, characterLimit, onNext, onError, onComplete);
     }
 
     public void getRandomCharacter(Consumer<List<Character>> onNext,
@@ -43,7 +54,7 @@ public class MarvelApiService {
             int randomCharacterOffset = new Random().nextInt(total.get() + 1);
             getCharactersWithOffset(randomCharacterOffset, RANDOM_CHARACTER_LIMIT, onNext, onError, onComplete);
         };
-        marvelApi.getAllCharacters(RANDOM_CHARACTER_LIMIT, 0, timestamp, MarvelApi.PUBLIC_KEY, hash)
+        marvelApi.getAllCharacters(RANDOM_CHARACTER_LIMIT, 0, timestamp, BuildConfig.PUBLIC_KEY, hash)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(ApiResponse::getData)
@@ -53,15 +64,15 @@ public class MarvelApiService {
 
 
     public Observable<ApiResponse<RelatedItem>> getComicsForCharacter(int characterId) {
-        return marvelApi.getComicsWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
+        return marvelApi.getComicsWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, BuildConfig.PUBLIC_KEY, hash);
     }
 
     public Observable<ApiResponse<RelatedItem>> getSeriesForCharacter(int characterId) {
-        return marvelApi.getSeriesWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
+        return marvelApi.getSeriesWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, BuildConfig.PUBLIC_KEY, hash);
     }
 
     public Observable<ApiResponse<RelatedItem>> getEventsForCharacter(int characterId) {
-        return marvelApi.getEventsWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, MarvelApi.PUBLIC_KEY, hash);
+        return marvelApi.getEventsWithCharacter(characterId, RELATED_ITEMS_LIMIT, timestamp, BuildConfig.PUBLIC_KEY, hash);
     }
 
     private void getCharactersWithOffset(int offset,
@@ -69,7 +80,7 @@ public class MarvelApiService {
                                          Consumer<List<Character>> onNext,
                                          Consumer<Throwable> onError,
                                          Action onComplete) {
-        marvelApi.getAllCharacters(characterLimit, offset, timestamp, MarvelApi.PUBLIC_KEY, hash)
+        marvelApi.getAllCharacters(characterLimit, offset, timestamp, BuildConfig.PUBLIC_KEY, hash)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(ApiResponse::getData)

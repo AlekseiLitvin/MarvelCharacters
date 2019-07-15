@@ -23,6 +23,4 @@
     <string name="fav_character_removed">Character has been removed from favourites</string>
     <string name="no_description_available">No description available</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -41,14 +41,13 @@ import static by.litvin.adapter.CharactersRecyclerViewAdapter.CHARACTER;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    //TODO move properties to separate file
     private int offset = 0;
     private int currentOffset = 0;
     private boolean isLoading = false;
 
     private CharactersRecyclerViewAdapter charactersRecyclerViewAdapter;
     private DrawerLayout drawerLayout;
-    private MarvelApiService marvelApiService = new MarvelApiService();
+    private MarvelApiService marvelApiService = new MarvelApiService(this);
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

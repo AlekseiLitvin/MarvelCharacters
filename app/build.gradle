@@ -25,6 +25,12 @@ android {
     }
 }
 
+
+android.buildTypes.each { type ->
+    type.buildConfigField "String", "PRIVATE_KEY", "$publicKey"
+    type.buildConfigField "String", "PUBLIC_KEY", "$privateKey"
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
