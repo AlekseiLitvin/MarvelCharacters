@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,13 +35,20 @@ public class CharactersRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     public void setCharacterItems(List<Character> characters) {
         int insertPosition = characters.size() + 1;
         this.characters.addAll(characters);
-//        notifyItemRangeInserted(insertPosition, characters.size());
+        notifyItemRangeInserted(insertPosition, characters.size());
         notifyDataSetChanged();
     }
 
     public void addNullDataForProgressBar() {
-        characters.add(null);
-        notifyItemInserted(characters.size() - 1);
+        Handler handler = new Handler();
+
+        final Runnable r = () -> {
+            characters.add(null);
+            notifyItemInserted(characters.size() - 1);
+        };
+
+        handler.post(r);
+
     }
 
     public void removeNullDataForProgressBar() {
