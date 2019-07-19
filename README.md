@@ -11,3 +11,4 @@ Android application that allows to see information of all Marvel characters, com
 - CardView, RecyclerView, ViewPager
 
 # Preview
+<img src="preview/Preview.gif" width="680">
